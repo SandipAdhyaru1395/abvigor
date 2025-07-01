@@ -1,7 +1,7 @@
 @extends('front.partials.layout')
 
 @section('content')
-    <div class="front container py-2">
+    <div class="front container my-5">
         @include('front.partials.sidebar')
         <div class="front main-content p-4 table-responsive">
             <div class="row mb-4">

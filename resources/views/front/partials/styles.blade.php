@@ -5,4 +5,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.material.min.css" integrity="sha512-xvrm5KqgBtR7kE0ehXfSSkQvzArzm/iBSx6aXcINru5dM0YWCaqrHfsN1PHCQBgL03/7fJHqypWZoA5w0T6lMA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="{{ asset('styles/style.min.css') }}">
+<link rel="stylesheet" href="{{ asset('styles/responsive.css') }}">
+<!-- <link rel="stylesheet" href="{{ asset('styles/font-awesome.min.css') }}"> -->
 @stack('styles')

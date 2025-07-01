@@ -143,6 +143,7 @@
 </head>
 
 <body>
+    @include('front.partials.header')
     <div id="loader">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -150,6 +151,9 @@
     </div>
 
     @yield('content')
+
+    @include('front.partials.footer')
+
     @include('front.partials.scripts')
     {!! Toastr::message() !!}
 
