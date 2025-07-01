@@ -18,7 +18,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-/public
+/public/storage
 /storage
 /composer.lock
 /index.php
