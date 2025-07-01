@@ -22,7 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-/public/storage/app/uploads
-/storage/app/uploads/public/*
-/storage/logs
+/public/storage/
+/storage/
 /composer.lock
