@@ -21,3 +21,5 @@ Thumbs.db
 /public
 /storage
 /composer.lock
+/index.php
+/.htaccess
