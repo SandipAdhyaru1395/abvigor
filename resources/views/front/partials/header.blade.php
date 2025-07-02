@@ -8,7 +8,7 @@
                                 alt="default-logo" title="default-logo"></a></div>
                 </div>
                 @php
-                    $url = str_replace('/abvigor','',url('/'));
+                   $url=config('app.url');
                 @endphp
                 <div class="nav-outer clearfix">
 
