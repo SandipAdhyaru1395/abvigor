@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $catalog_categories = CatalogCategory::with('children')->where('parent_id', 41)->get();
+        $catalog_categories = CatalogCategory::with('children')->where('parent_id', null)->get();
         // $catalog_categories = null;
         view()->share('catalog_categories', $catalog_categories);
     }
