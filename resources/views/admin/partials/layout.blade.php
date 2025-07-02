@@ -44,7 +44,7 @@
             background-color: #ed1c24;
         }
 
-        .form-control:focus{
+        .form-control:focus {
             border-color: #ed1c24;
             box-shadow: 0 0 0 .25rem rgb(253 13 13 / 14%);
         }
