@@ -103,19 +103,19 @@
                         <!--Footer Column-->
                         <div class="footer-column col-lg-6 col-md-6 col-sm-12">
                             <div class="footer-widget links-widget">
+                                @if($catalog_categories->isNotEmpty())
                                 <h2>Products</h2>
+                                @endif  
                                 <ul class="footer-link">
-                                    <li><a href="/category/fuel-pipes">Fuel Pipes</a></li>
-                                    <li><a href="/products/compression-exhaust-pipes">Compression Exhaust Pipes</a></li>
-                                    <li><a href="/products/cnc-machined-components">CNC Machined Components</a></li>
-                                    <li><a href="/products/hydraulic-fittings">Hydraulic Fittings</a></li>
-                                    <li><a href="/products/seamless-tipping-pipe-tractors">Seamless Tipping Pipe for
-                                            Tractors</a></li>
-                                    <li><a href="/products/nuts">Nuts</a></li>
+                                    @forelse($catalog_categories as $category)
+                                    <li><a href="/product_category/{{ $category->slug }}">{{ $category->title }}</a></li>
+                                    @empty
+
+                                    @endforelse
                                 </ul>
                             </div>
                         </div>
-
+                        
                         <!--Footer Column-->
                         <div class="footer-column col-lg-6 col-md-6 col-sm-12">
                             <div class="footer-widget newsletter-widget">
