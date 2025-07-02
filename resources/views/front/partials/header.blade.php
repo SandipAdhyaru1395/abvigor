@@ -21,7 +21,7 @@
                             <ul class="navigation clearfix">
 
                                 <li role="presentation" class="  ">
-                                    <a href="">Home</a>
+                                    <a href="/">Home</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
