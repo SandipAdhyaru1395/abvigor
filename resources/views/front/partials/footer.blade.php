@@ -3,7 +3,9 @@
         <!--Widgets Section-->
         <div class="widgets-section">
             <div class="row clearfix">
-
+                @php
+                   $url=config('app.url');
+                @endphp
                 <!--Column-->
                 <div class="big-column col-lg-7 col-md-12 col-sm-12">
                     <div class="row clearfix">
@@ -12,9 +14,9 @@
                         <div class="footer-column col-lg-6 col-md-6 col-sm-12">
                             <div class="footer-widget logo-widget">
                                 <div class="logo">
-                                    <a href="/"><img
-                                            src="https://prestigeindia.co.in/themes/zen/assets/images/footer-logo-img.png"
-                                            alt="Prestige (India)"></a>
+                                    <a href="/"><img width="140px" height="36px"
+                                            src="{{ asset('logo.png') }}"
+                                            alt="logo"></a>
                                 </div>
                                 <div class="text">
                                     Precision Components Manufacturer & Global Supplier
@@ -44,22 +46,22 @@
                                 <h2>Usefull Links</h2>
                                 <ul class="footer-link">
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/company/about-us">About us</a>
+                                        <a href="/company/about-us">About us</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="">CEO's Message</a>
+                                        <a href="/about-us/#ceo-message">CEO's Message</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/company/core-purpose">Core Purpose</a>
+                                        <a href="/company/core-purpose">Core Purpose</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/company/core-values">Core Values</a>
+                                        <a href="/company/core-values">Core Values</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/company/facilities">Facilities</a>
+                                        <a href="/company/facilities">Facilities</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/infrastructure">Capabilities</a>
+                                        <a href="/infrastructure">Capabilities</a>
                                     </li>
 
                                 </ul>
@@ -70,22 +72,22 @@
                                 <h2>Quick Links</h2>
                                 <ul class="footer-link">
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/infrastructure">InfraStructure</a>
+                                        <a href="/infrastructure">InfraStructure</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/company/vision-mission">Vision</a>
+                                        <a href="/company/vision-mission">Vision</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/quality/quality-policy">Quality Policy</a>
+                                        <a href="/quality/quality-policy">Quality Policy</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/quality/quality-policy">Certificates</a>
+                                        <a href="/quality/quality-policy">Certificates</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/ceos-message">Media</a>
+                                        <a href="/ceos-message">Media</a>
                                     </li>
                                     <li role="presentation">
-                                        <a href="https://prestigeindia.co.in/brochure">Brochure</a>
+                                        <a href="/brochure">Brochure</a>
                                     </li>
 
                                 </ul>
@@ -147,7 +149,7 @@
         <div class="auto-container">
             <div class="row clearfix">
                 <div class="column col-md-6 col-sm-12 col-xs-12">
-                    <div class="copyright">Copyrights © 2018 <a href="#">Prestige (India)</a>, Rajkot. All Rights
+                    <div class="copyright">Copyrights © 2018 <a href="#">abvigor(India)</a>, Rajkot. All Rights
                         Reserved. </div>
                 </div>
                 <div class="column col-md-6 col-sm-12 col-xs-12">
