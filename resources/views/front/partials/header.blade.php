@@ -7,7 +7,9 @@
                     <div class="logo"><a href="#"><img width="130px" height="34px" src="{{ asset('logo.png') }}"
                                 alt="default-logo" title="default-logo"></a></div>
                 </div>
-
+                @php
+                    $url = str_replace('/abvigor','',url('/'));
+                @endphp
                 <div class="nav-outer clearfix">
 
                     <!-- Main Menu -->
@@ -19,33 +21,33 @@
                             <ul class="navigation clearfix">
 
                                 <li role="presentation" class="  ">
-                                    <a href="{{ url('/') }}">Home</a>
+                                    <a href="{{ $url }}">Home</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
-                                    <a href="{{ url('/') }}/company">
+                                    <a href="{{ $url }}/company">
                                         Company
                                     </a>
                                     <ul>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/company/about-us">About us</a>
+                                            <a href="{{ $url }}/company/about-us">About us</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/ceos-message">CEO's Message</a>
+                                            <a href="{{ $url }}/ceos-message">CEO's Message</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/company/facilities">Facilities</a>
+                                            <a href="{{ $url }}/company/facilities">Facilities</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/company/vision-mission">Vision</a>
+                                            <a href="{{ $url }}/company/vision-mission">Vision</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/company/career">Career</a>
+                                            <a href="{{ $url }}/company/career">Career</a>
                                         </li>
 
 
@@ -92,11 +94,11 @@
                                     </ul>
                                 </li>
                                 <li role="presentation" class="  ">
-                                    <a href="{{ url('/') }}/infrastructure">Infrastructure</a>
+                                    <a href="{{ $url }}/infrastructure">Infrastructure</a>
                                 </li>
 
                                 <li role="presentation" class="  ">
-                                    <a href="{{ url('/') }}/quality/quality-policy">Quality</a>
+                                    <a href="{{ $url }}/quality/quality-policy">Quality</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
@@ -106,11 +108,11 @@
                                     <ul>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/fitting-videos">Fitting Videos</a>
+                                            <a href="{{ $url }}/fitting-videos">Fitting Videos</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/brochure">Brochure</a>
+                                            <a href="{{ $url }}/brochure">Brochure</a>
                                         </li>
 
 
@@ -118,7 +120,7 @@
                                     <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
                                 </li>
                                 <li role="presentation" class="  ">
-                                    <a href="{{ url('/') }}/contact-us">Contact Us</a>
+                                    <a href="{{ $url }}/contact-us">Contact Us</a>
                                 </li>
 
 
@@ -149,33 +151,33 @@
                             <ul class="navigation clearfix">
 
                                 <li role="presentation" class="  ">
-                                    <a href="{{ url('/') }}">Home</a>
+                                    <a href="{{ $url }}">Home</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
-                                    <a href="{{ url('/') }}/company">
+                                    <a href="{{ $url }}/company">
                                         Company
                                     </a>
                                     <ul>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/company/about-us">About us</a>
+                                            <a href="{{ $url }}/company/about-us">About us</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/ceos-message">CEO's Message</a>
+                                            <a href="{{ $url }}/ceos-message">CEO's Message</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/company/facilities">Facilities</a>
+                                            <a href="{{ $url }}/company/facilities">Facilities</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/company/vision-mission">Vision</a>
+                                            <a href="{{ $url }}/company/vision-mission">Vision</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/company/career">Career</a>
+                                            <a href="{{ $url }}/company/career">Career</a>
                                         </li>
 
 
@@ -222,11 +224,11 @@
                                     </ul>
                                 </li>
                                 <li role="presentation" class="  ">
-                                    <a href="{{ url('/') }}/infrastructure">Infrastructure</a>
+                                    <a href="{{ $url }}/infrastructure">Infrastructure</a>
                                 </li>
 
                                 <li role="presentation" class="  ">
-                                    <a href="{{ url('/') }}/quality/quality-policy">Quality</a>
+                                    <a href="{{ $url }}/quality/quality-policy">Quality</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
@@ -236,11 +238,11 @@
                                     <ul>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/fitting-videos">Fitting Videos</a>
+                                            <a href="{{ $url }}/fitting-videos">Fitting Videos</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="{{ url('/') }}/brochure">Brochure</a>
+                                            <a href="{{ $url }}/brochure">Brochure</a>
                                         </li>
 
 
@@ -248,7 +250,7 @@
                                     <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
                                 </li>
                                 <li role="presentation" class="  ">
-                                    <a href="{{ url('/') }}/contact-us">Contact Us</a>
+                                    <a href="{{ $url }}/contact-us">Contact Us</a>
                                 </li>
 
 
