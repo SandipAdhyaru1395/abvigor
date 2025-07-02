@@ -5,7 +5,7 @@
         @include('front.partials.sidebar')
 
         <div class="front main-content p-4">
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col text-end">
                     <a href="{{ route('order.list') }}"><button class="btn btn-sm btn-secondary text-white">Back</button></a>
                 </div>

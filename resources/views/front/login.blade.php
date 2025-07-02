@@ -1,7 +1,7 @@
 @extends('front.partials.layout')
 
 @section('content')
-    <div class="container my-5">
+    <div class="container" style="margin-top:150px; margin-bottom:150px;">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow-sm">

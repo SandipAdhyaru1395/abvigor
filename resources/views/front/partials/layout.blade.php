@@ -56,11 +56,13 @@
 
         .front.sidebar {
             position: sticky;
+            border-radius: 8px;
             top: 0;
             width: 50%;
             height: 100vh;
-            background-color: #f8f9fa;
+            background-color: #f6f2f2;
             max-width: 250px;
+            font-weight: 600;
         }
 
         .front.container {

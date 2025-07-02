@@ -65,6 +65,7 @@
             height: 100vh;
             background-color: #f8f9fa;
             max-width: 250px;
+            font-weight: 600;
         }
 
         .admin.container {
