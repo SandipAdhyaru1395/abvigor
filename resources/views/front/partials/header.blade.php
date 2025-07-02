@@ -4,14 +4,8 @@
             <div class="clearfix">
 
                 <div class="pull-left logo-box">
-                    <div class="logo"><a href="#"><img
-                                src="https://prestigeindia.co.in/themes/zen/assets/images/prestige-logo.png"
-                                alt="Prestige (India)" title="Prestige (India)"></a></div>
-                </div>
-                <div class="pull-left logo-box">
-                    <div class="logo"><a href="#"><img
-                                src="https://prestigeindia.co.in/themes/zen/assets/images/auto-royal-logo.png"
-                                alt="Prestige (India)" title="Prestige (India)"></a></div>
+                    <div class="logo"><a href="#"><img width="130px" height="34px" src="{{ asset('logo.png') }}"
+                                alt="default-logo" title="default-logo"></a></div>
                 </div>
 
                 <div class="nav-outer clearfix">
@@ -25,102 +19,84 @@
                             <ul class="navigation clearfix">
 
                                 <li role="presentation" class="  ">
-                                    <a href="https://prestigeindia.co.in">Home</a>
+                                    <a href="{{ url('/') }}">Home</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
-                                    <a href="https://prestigeindia.co.in/company">
+                                    <a href="{{ url('/') }}/company">
                                         Company
                                     </a>
                                     <ul>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/company/about-us">About us</a>
+                                            <a href="{{ url('/') }}/company/about-us">About us</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/ceos-message">CEO's Message</a>
+                                            <a href="{{ url('/') }}/ceos-message">CEO's Message</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/company/facilities">Facilities</a>
+                                            <a href="{{ url('/') }}/company/facilities">Facilities</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/company/vision-mission">Vision</a>
+                                            <a href="{{ url('/') }}/company/vision-mission">Vision</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/company/career">Career</a>
+                                            <a href="{{ url('/') }}/company/career">Career</a>
                                         </li>
 
 
                                     </ul>
                                     <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
                                 </li>
-                                <li role="presentation" class="dropdown   ">
-                                    <a href="https://prestigeindia.co.in/categories">
+                               <li role="presentation" class="dropdown   ">
+                                    <a href="{{ url('/categories') }}">
                                         Products
                                     </a>
                                     <ul>
+                                        @forelse($catalog_categories as $category)
+                                            <li role="presentation" class=" @if($category->children->isNotEmpty()) dropdown @endif ">
+                                                <a href="{{ '/product_category/' . $category->slug }}">
+                                                    {{ $category->title }}
+                                                </a>
+                                                @if($category->children->isNotEmpty())
+                                                    <div class="dropdown-btn"><span class="fa fa-angle-down"></span>
+                                                    </div>
+                                                
+                                                    <ul>
+                                                    @foreach($category->children as $child)
+                                                        <li role="presentation" class="  ">
+                                                            <a href="{{ '/product_category/' . $category->slug }}">{{ $child->title }}</a>
+                                                        </li>
+                                                    @endforeach
+                                                    <!-- <li role="presentation" class="  ">
+                                                        <a href="/products/diesel-engine-fuel-pipes">Diesel Engine Fuel
+                                                            Pipes</a>
+                                                    </li> -->
 
-                                        <li role="presentation" class="dropdown   ">
-                                            <a href="/category/fuel-pipes">
-                                                Fuel Pipes
-                                            </a>
-                                            <ul>
-
-                                                <li role="presentation" class="  ">
-                                                    <a href="/products/diesel-engine-fuel-pipes">Diesel Engine Fuel
-                                                        Pipes</a>
-                                                </li>
-
-                                                <li role="presentation" class="  ">
-                                                    <a href="/products/truck-tractor-fuel-pipes">Truck &amp; Tractor
-                                                        Fuel Pipes</a>
-                                                </li>
-
-                                                <li role="presentation" class="  ">
-                                                    <a href="/products/marine-engines-and-gensets-fuel-pipes">Marine
-                                                        Engines &amp; Gensets Fuel Pipes</a>
-                                                </li>
-
-                                                <li role="presentation" class="  ">
-                                                    <a href="/products/compression-exhaust-pipes">Compression Exhaust
-                                                        Pipes</a>
-                                                </li>
-
-
-                                            </ul>
-                                            <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
-                                        </li>
-                                        <li role="presentation" class="  ">
-                                            <a href="/products/cnc-machined-components">CNC Machined Components</a>
-                                        </li>
-
-                                        <li role="presentation" class="  ">
-                                            <a href="/products/hydraulic-fittings">Hydraulic Fittings</a>
-                                        </li>
-
-                                        <li role="presentation" class="  ">
-                                            <a href="/products/seamless-tipping-pipe-tractors">Seamless Tipping Pipe
-                                                Tractors</a>
-                                        </li>
-
-                                        <li role="presentation" class="  ">
-                                            <a href="/products/nuts">Nuts</a>
-                                        </li>
-
+                                                    </ul>
+                                                    <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
+                                                @endif
+                                            </li>
+                                        @empty
+                                            <li role="presentation" class="">
+                                                <a href="#">
+                                                    No categories found
+                                                </a>
+                                            </li>
+                                        @endforelse
 
                                     </ul>
-                                    <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
                                 </li>
                                 <li role="presentation" class="  ">
-                                    <a href="https://prestigeindia.co.in/infrastructure">Infrastructure</a>
+                                    <a href="{{ url('/') }}/infrastructure">Infrastructure</a>
                                 </li>
 
                                 <li role="presentation" class="  ">
-                                    <a href="https://prestigeindia.co.in/quality/quality-policy">Quality</a>
+                                    <a href="{{ url('/') }}/quality/quality-policy">Quality</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
@@ -130,11 +106,11 @@
                                     <ul>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/fitting-videos">Fitting Videos</a>
+                                            <a href="{{ url('/') }}/fitting-videos">Fitting Videos</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/brochure">Brochure</a>
+                                            <a href="{{ url('/') }}/brochure">Brochure</a>
                                         </li>
 
 
@@ -142,7 +118,7 @@
                                     <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
                                 </li>
                                 <li role="presentation" class="  ">
-                                    <a href="https://prestigeindia.co.in/contact-us">Contact Us</a>
+                                    <a href="{{ url('/') }}/contact-us">Contact Us</a>
                                 </li>
 
 
@@ -162,56 +138,44 @@
     <div class="sticky-header">
         <div class="auto-container">
             <div class="clearfix">
-
                 <div class="pull-left logo-box">
-                    <div class="logo"><a href="#"><img
-                                src="https://prestigeindia.co.in/themes/zen/assets/images/prestige-logo.png"
-                                alt="Prestige (India)" title="Prestige (India)"></a></div>
+                    <div class="logo"><a href="#"><img width="130px" height="34px" src="{{ asset('logo.png') }}"
+                                alt="default-logo" title="default-logo"></a></div>
                 </div>
-                <div class="pull-left logo-box">
-                    <div class="logo"><a href="#"><img
-                                src="https://prestigeindia.co.in/themes/zen/assets/images/auto-royal-logo.png"
-                                alt="Prestige (India)" title="Prestige (India)"></a></div>
-                </div>
-
                 <div class="nav-outer clearfix">
-
                     <!-- Main Menu -->
-
-
                     <nav class="main-menu navbar-expand-md">
-
                         <div class="navbar-collapse collapse clearfix">
                             <ul class="navigation clearfix">
 
                                 <li role="presentation" class="  ">
-                                    <a href="https://prestigeindia.co.in">Home</a>
+                                    <a href="{{ url('/') }}">Home</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
-                                    <a href="https://prestigeindia.co.in/company">
+                                    <a href="{{ url('/') }}/company">
                                         Company
                                     </a>
                                     <ul>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/company/about-us">About us</a>
+                                            <a href="{{ url('/') }}/company/about-us">About us</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/ceos-message">CEO's Message</a>
+                                            <a href="{{ url('/') }}/ceos-message">CEO's Message</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/company/facilities">Facilities</a>
+                                            <a href="{{ url('/') }}/company/facilities">Facilities</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/company/vision-mission">Vision</a>
+                                            <a href="{{ url('/') }}/company/vision-mission">Vision</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/company/career">Career</a>
+                                            <a href="{{ url('/') }}/company/career">Career</a>
                                         </li>
 
 
@@ -219,68 +183,50 @@
                                     <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
                                 </li>
                                 <li role="presentation" class="dropdown   ">
-                                    <a href="https://prestigeindia.co.in/categories">
+                                    <a href="{{ url('/categories') }}">
                                         Products
                                     </a>
                                     <ul>
+                                        @forelse($catalog_categories as $category)
+                                            <li role="presentation" class=" @if($category->children->isNotEmpty()) dropdown @endif ">
+                                                <a href="{{ '/product_category/' . $category->slug }}">
+                                                    {{ $category->title }}
+                                                </a>
+                                                @if($category->children->isNotEmpty())
+                                                    <div class="dropdown-btn"><span class="fa fa-angle-down"></span>
+                                                    </div>
+                                                
+                                                    <ul>
+                                                    @foreach($category->children as $child)
+                                                        <li role="presentation" class="  ">
+                                                            <a href="{{ '/product_category/' . $category->slug }}">{{ $child->title }}</a>
+                                                        </li>
+                                                    @endforeach
+                                                    <!-- <li role="presentation" class="  ">
+                                                        <a href="/products/diesel-engine-fuel-pipes">Diesel Engine Fuel
+                                                            Pipes</a>
+                                                    </li> -->
 
-                                        <li role="presentation" class="dropdown   ">
-                                            <a href="/category/fuel-pipes">
-                                                Fuel Pipes
-                                            </a>
-                                            <ul>
-
-                                                <li role="presentation" class="  ">
-                                                    <a href="/products/diesel-engine-fuel-pipes">Diesel Engine Fuel
-                                                        Pipes</a>
-                                                </li>
-
-                                                <li role="presentation" class="  ">
-                                                    <a href="/products/truck-tractor-fuel-pipes">Truck &amp; Tractor
-                                                        Fuel Pipes</a>
-                                                </li>
-
-                                                <li role="presentation" class="  ">
-                                                    <a href="/products/marine-engines-and-gensets-fuel-pipes">Marine
-                                                        Engines &amp; Gensets Fuel Pipes</a>
-                                                </li>
-
-                                                <li role="presentation" class="  ">
-                                                    <a href="/products/compression-exhaust-pipes">Compression Exhaust
-                                                        Pipes</a>
-                                                </li>
-
-
-                                            </ul>
-                                            <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
-                                        </li>
-                                        <li role="presentation" class="  ">
-                                            <a href="/products/cnc-machined-components">CNC Machined Components</a>
-                                        </li>
-
-                                        <li role="presentation" class="  ">
-                                            <a href="/products/hydraulic-fittings">Hydraulic Fittings</a>
-                                        </li>
-
-                                        <li role="presentation" class="  ">
-                                            <a href="/products/seamless-tipping-pipe-tractors">Seamless Tipping Pipe
-                                                Tractors</a>
-                                        </li>
-
-                                        <li role="presentation" class="  ">
-                                            <a href="/products/nuts">Nuts</a>
-                                        </li>
-
+                                                    </ul>
+                                                    <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
+                                                @endif
+                                            </li>
+                                        @empty
+                                            <li role="presentation" class="">
+                                                <a href="#">
+                                                    No categories found
+                                                </a>
+                                            </li>
+                                        @endforelse
 
                                     </ul>
-                                    <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
                                 </li>
                                 <li role="presentation" class="  ">
-                                    <a href="https://prestigeindia.co.in/infrastructure">Infrastructure</a>
+                                    <a href="{{ url('/') }}/infrastructure">Infrastructure</a>
                                 </li>
 
                                 <li role="presentation" class="  ">
-                                    <a href="https://prestigeindia.co.in/quality/quality-policy">Quality</a>
+                                    <a href="{{ url('/') }}/quality/quality-policy">Quality</a>
                                 </li>
 
                                 <li role="presentation" class="dropdown   ">
@@ -290,11 +236,11 @@
                                     <ul>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/fitting-videos">Fitting Videos</a>
+                                            <a href="{{ url('/') }}/fitting-videos">Fitting Videos</a>
                                         </li>
 
                                         <li role="presentation" class="  ">
-                                            <a href="https://prestigeindia.co.in/brochure">Brochure</a>
+                                            <a href="{{ url('/') }}/brochure">Brochure</a>
                                         </li>
 
 
@@ -302,7 +248,7 @@
                                     <div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>
                                 </li>
                                 <li role="presentation" class="  ">
-                                    <a href="https://prestigeindia.co.in/contact-us">Contact Us</a>
+                                    <a href="{{ url('/') }}/contact-us">Contact Us</a>
                                 </li>
 
 
