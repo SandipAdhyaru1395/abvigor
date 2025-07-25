@@ -49,7 +49,9 @@ class UserController extends Controller
         $password = '123456';
 
         // Find user by phone
-        $user = User::withTrashed()->where('phone', $phone)->first();
+        $user = User::withTrashed()->where(function($query) use($phone){
+            $query->where('mobile', $phone)->orWhere('phone', $phone);
+        })->first();
 
         if (!$user) {
             Toastr::error('User not found.');
