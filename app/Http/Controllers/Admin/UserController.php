@@ -24,7 +24,12 @@ class UserController extends Controller
         $users = User::withTrashed()->orderBy('id', 'desc')->get();
 
         return DataTables::of($users)
-            ->addColumn('created_at', fn($row) => $row->created_at->format('d/m/Y'))
+            // ->addColumn('created_at', fn($row) => $row->created_at->format('d/m/Y'))
+            ->addColumn('created_at', function ($row) {
+                return $row->created_at
+                    ? Carbon::parse($row->created_at)->format('d/m/Y')
+                    : null;
+            })
             ->addColumn('last_login', function ($row) {
                 return $row->last_login
                     ? Carbon::parse($row->last_login)->format('d/m/Y')
