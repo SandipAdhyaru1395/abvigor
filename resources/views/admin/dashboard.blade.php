@@ -1,7 +1,7 @@
 @extends('admin.partials.layout')
 
 @section('content')
-    <div class="admin container py-2">
+    <div class="admin container-fluid py-2">
         @include('admin.partials.sidebar')
         <!-- Main Content -->
         <div class="admin main-content p-4" style="">

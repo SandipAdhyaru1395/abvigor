@@ -1,26 +1,294 @@
 @extends('admin.partials.layout')
 @push('styles')
     <style>
-        .table-hover tbody tr:hover {
+        .orders-page-wrapper {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .orders-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .orders-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title-icon {
+            font-size: 24px;
+            color: #667eea;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            color: white;
+        }
+
+        .btn-delete-selected {
+            background: linear-gradient(135deg, #ed1c24 0%, #ff6b6b 100%);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(237, 28, 36, 0.4);
+        }
+
+        .btn-delete-selected:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(237, 28, 36, 0.6);
+            color: white;
+        }
+
+        #catalog-catgories-table {
+            width: 100% !important;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        #catalog-catgories-table thead {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+            color: white !important;
+        }
+
+        #catalog-catgories-table thead th {
+            padding: 14px 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+            border: none;
+            color: #ffffff !important;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        }
+
+        #catalog-catgories-table thead th:first-child {
+            border-top-left-radius: 12px;
+        }
+
+        #catalog-catgories-table thead th:last-child {
+            border-top-right-radius: 12px;
+        }
+
+        #catalog-catgories-table tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        #catalog-catgories-table tbody tr:hover {
+            background: linear-gradient(90deg, #f8f9ff 0%, #ffffff 100%);
             cursor: pointer;
+            transform: scale(1.01);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        #catalog-catgories-table tbody td {
+            padding: 12px 12px;
+            vertical-align: middle;
+            color: #555;
+            font-size: 14px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+            border-radius: 4px;
+        }
+
+        /* DataTables Controls Styling (match orders list) */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            margin: 15px 0;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 8px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 6px 12px;
+            transition: all 0.3s ease;
+        }
+
+        .dataTables_wrapper .dataTables_length select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+
+        /* Export Buttons Styling */
+        .dt-buttons .btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            color: #555;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 8px;
+        }
+
+        .dt-buttons .btn:hover {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Pagination Styling */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 8px 12px;
+            margin: 0 2px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #667eea;
+            border-color: #667eea;
+            color: white !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white !important;
+        }
+
+        /* Loading Spinner */
+        .dataTables_processing {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Empty State Styling */
+        .dataTables_empty {
+            padding: 40px !important;
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .orders-card {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 @endpush
 @section('content')
-    <div class="admin container py-2">
-        @include('admin.partials.sidebar')
-        <div class="admin main-content p-4 table-responsive">
-            <table id="catalog-catgories-table" class="table table-hover table-responsive table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col"><input type="checkbox" id="select-all"></th>
-                        <th scope="col">TITLE</th>
-                    </tr>
-                </thead>
-                <tbody>
+    <div class="orders-page-wrapper">
+        <div class="admin container-fluid py-2">
+            @include('admin.partials.sidebar')
+            <div class="admin main-content p-4">
+                <div class="orders-card">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-tags page-title-icon"></i>
+                            Catalog Categories
+                        </h1>
+                    </div>
 
-                </tbody>
-            </table>
+                    <div class="table-responsive">
+                        <table id="catalog-catgories-table" class="table table-hover table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><input type="checkbox" id="select-all"></th>
+                                    <th scope="col">Title</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -37,12 +305,10 @@
 
         $(document).ready(function() {
 
-            var table_top_left_html = `<div class="row mb-4">
-                <div class="col">
-                    <a href="{{ route('admin.catalog.category.add') }}"><button class="btn btn-sm bg-primary text-white">Create</button></a>
-                    <button id="delete-selected" class="btn btn-danger btn-sm bg-base">Delete Selected</button>
-                </div>
-            </div>`;
+            var table_top_left_html = `<div class="action-buttons">
+                    <a href="{{ route('admin.catalog.category.add') }}"><button class="btn btn-create">+ Create Category</button></a>
+                    <button id="delete-selected" class="btn btn-delete-selected">Delete Selected</button>
+                </div>`;
 
             $('#select-all').on('click', function() {
                 $('.row-checkbox').prop('checked', this.checked);

@@ -2,27 +2,176 @@
 @push('styles')
     <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet">
     <style>
-        #drop-area.bg-hover {
-            background-color: #f8f9fa;
-            border-color: #007bff;
+        .orders-page-wrapper {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .orders-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .orders-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title-icon {
+            font-size: 24px;
+            color: #667eea;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orders-card label.form-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .orders-card .form-control,
+        .orders-card .form-select {
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            font-family: 'Segoe UI', sans-serif;
+            border: 1px solid #dfe6e9;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+
+        .orders-card .form-control:focus,
+        .orders-card .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        .orders-card .error-text {
+            font-size: 0.8rem;
+        }
+
+        .upload-area,
+        #drop-area {
+            cursor: pointer;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            background: #f8f9ff;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        #drop-area.bg-hover,
+        .upload-area.bg-hover {
+            background-color: #eef0ff;
+            border-color: #764ba2;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-danger,
+        .btn-secondary {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 8px 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ed1c24 0%, #ff6b6b 100%);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(237, 28, 36, 0.5);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
         }
 
         #cke_notifications_area_technical_specification {
             display: none;
         }
+
+        @media (max-width: 768px) {
+            .orders-card {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 @endpush
 @section('content')
-    <div class="admin container py-2">
-        @include('admin.partials.sidebar')
-        <div class="admin main-content p-4 table-responsive">
-            <form class="mb-5" id="product-form" action="{{ route('admin.catalog.product.update') }}" method="POST"
+    <div class="orders-page-wrapper">
+        <div class="admin container-fluid py-2">
+            @include('admin.partials.sidebar')
+            <div class="admin main-content p-4">
+                <div class="orders-card">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-box-open page-title-icon"></i>
+                            Edit Catalog Product
+                        </h1>
+                    </div>
+
+                    <form class="mb-3" id="product-form" action="{{ route('admin.catalog.product.update') }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="catalog_product_id" value="{{ $catalog_product->id }}">
                 <div class="row mb-3">
                     <div class="col-lg-6 mt-3">
-                        <label for="title" class="form-label align-self-end fw-bold">Title : <span
+                        <label for="title" class="form-label align-self-end">Title : <span
                                 class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="title" id="title"
                             value="{{ $catalog_product->title }}" autocomplete="off">
@@ -33,7 +182,7 @@
                         @enderror
                     </div>
                     <div class="col-lg-6 mt-3">
-                        <label for="slug" class="form-label align-self-end fw-bold">Slug : <span
+                        <label for="slug" class="form-label align-self-end">Slug : <span
                                 class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="slug" id="slug" value="{{ $catalog_product->slug }}"
                             autocomplete="off">
@@ -44,7 +193,7 @@
                         @enderror
                     </div>
                     <div class="col-lg-6 mt-3">
-                        <label for="brand" class="form-label align-self-end fw-bold">Brand : <span
+                        <label for="brand" class="form-label align-self-end">Brand : <span
                                 class="text-danger">*</span></label>
                         <select class="form-select select2" name="brand_id" data-placeholder="Select Brand" id="brand"
                             aria-label="Default select example">
@@ -74,10 +223,9 @@
                         @enderror
                     </div>
                     <div class="col-6 mt-3">
-                        <label class="form-label fw-bold">Product Image:</label>
-                        <div id="drop-area" class="rounded p-4 text-center"
-                            style="cursor:pointer; border: 2px dashed #0d6efd;">
-                            <p class="mb-2">Drag & drop an image or click to select</p>
+                        <label class="form-label">Product Image:</label>
+                        <div id="drop-area" class="upload-area rounded p-4 text-center">
+                            <p class="mb-2">Drag &amp; drop an image or click to select</p>
                             @php
                                 $imageUrl = $catalog_product->ImageUrl
                                     ? $catalog_product->ImageUrl
@@ -101,7 +249,7 @@
 
                     </div>
                     <div class="col-12 mt-3">
-                        <label for="technical_specification" class="form-label align-self-end fw-bold">Technical
+                        <label for="technical_specification" class="form-label align-self-end">Technical
                             Specification : </label>
                         <textarea class="form-control" name="technical_specification"
                             id="technical_specification">{{ $catalog_product->technical_specification }}</textarea>
@@ -114,21 +262,25 @@
                     </div>
 
                 </div>
-                <div class="row mt-5" style="bottom: 0;">
-                    <div class="col">
-                        <button type="submit" class="btn btn-sm btn-primary text-white">Save</button>
-                        <input type="hidden" name="close" value="1" disabled>
-                        <button type="submit" onclick="$('input[name=close]').prop('disabled', false);"
-                            class="btn btn-sm btn-primary text-white">Save & Close</button>
-                        <a href="{{ route('admin.catalog.product.list') }}"><button type="button"
-                                class="btn btn-sm bg-danger text-white">Cancel</button></a>
-                    </div>
-                    <div class="col text-end">
-                        <a href="{{ route('admin.catalog.product.delete', $catalog_product->id) }}"><button type="button"
-                                id="delete-product" class="btn btn-sm btn-danger">Delete Product</button></a>
-                    </div>
-                </div>
+                        <div class="row mt-4 align-items-center">
+                            <div class="col-md-8 mb-3 mb-md-0">
+                                <div class="action-buttons">
+                                    <button type="submit" class="btn btn-sm btn-primary text-white">Save</button>
+                                    <input type="hidden" name="close" value="1" disabled>
+                                    <button type="submit" onclick="$('input[name=close]').prop('disabled', false);"
+                                        class="btn btn-sm btn-primary text-white">Save &amp; Close</button>
+                                    <a href="{{ route('admin.catalog.product.list') }}"
+                                        class="btn btn-sm btn-secondary text-white">Cancel</a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <a href="{{ route('admin.catalog.product.delete', $catalog_product->id) }}"
+                                    class="btn btn-sm btn-danger" id="delete-product">Delete Product</a>
+                            </div>
+                        </div>
             </form>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

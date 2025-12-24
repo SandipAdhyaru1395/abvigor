@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel</title>
+    <title>{{ config('app.name') ? config('app.name') : '' }}</title>
     @include('admin.partials.styles')
     <style>
         body {
@@ -44,6 +44,14 @@
             background-color: #ed1c24;
         }
 
+        .form-control {
+            border-color: #adb5bd;
+        }
+
+        .form-select {
+            border-color: #adb5bd;
+        }
+
         .form-control:focus {
             border-color: #ed1c24;
             box-shadow: 0 0 0 .25rem rgb(253 13 13 / 14%);
@@ -63,9 +71,7 @@
             top: 0;
             width: 50%;
             height: 100vh;
-            background-color: #f8f9fa;
-            max-width: 250px;
-            font-weight: 600;
+            max-width: 280px;
         }
 
         .admin.container {
@@ -75,23 +81,6 @@
         .admin.main-content {
             width: 80%;
             margin-left: 50px;
-        }
-
-        .nav-link {
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .nav-link.active {
-            background-color: #ed1c24;
-            color: #e9ecef;
-            /* transition: background-color 0.3s, color 0.3s; */
-        }
-
-        .nav-link:hover {
-            background-color: #e9ecef;
-            /* Light gray background on hover */
-            color: #ed1c24;
-            /* Bootstrap primary color */
         }
 
         .table-responsive {
@@ -109,10 +98,11 @@
             .admin.sidebar {
                 position: fixed;
                 top: 0;
-                left: -50%;
+                left: -100%;
                 height: 100vh;
                 z-index: 1040;
                 transition: left 0.3s ease-in-out;
+                max-width: 280px;
             }
 
             .admin.sidebar.show {

@@ -1,130 +1,350 @@
 @extends('admin.partials.layout')
 @push('styles')
     <style>
-        input.form-control {
-            border-radius: 0.3rem;
-            padding: 0.4rem 0.6rem;
-            font-size: 0.875rem;
-            /* small but readable */
-            font-family: 'Segoe UI', sans-serif;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-            transition: border-color 0.2s, box-shadow 0.2s;
+        .orders-page-wrapper {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
         }
 
-        .table-hover tbody tr:hover {
+        .orders-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .orders-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-title-icon {
+            font-size: 24px;
+            color: #667eea;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        .orders-card label.form-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .orders-card .form-control,
+        .orders-card .form-select {
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            font-family: 'Segoe UI', sans-serif;
+            border: 1px solid #dfe6e9;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+
+        .orders-card .form-control:focus,
+        .orders-card .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        .orders-card .error-text {
+            font-size: 0.8rem;
+        }
+
+        #order-products-table {
+            width: 100% !important;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        #order-products-table thead {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+            color: white !important;
+        }
+
+        #order-products-table thead th {
+            padding: 14px 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+            border: none;
+            color: #ffffff !important;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+        }
+
+        #order-products-table thead th:first-child {
+            border-top-left-radius: 12px;
+        }
+
+        #order-products-table thead th:last-child {
+            border-top-right-radius: 12px;
+        }
+
+        #order-products-table tbody tr {
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        #order-products-table tbody tr:hover {
+            background: linear-gradient(90deg, #f8f9ff 0%, #ffffff 100%);
             cursor: pointer;
+            transform: scale(1.01);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        #order-products-table tbody td {
+            padding: 12px 12px;
+            vertical-align: middle;
+            color: #555;
+            font-size: 14px;
+        }
+
+        #order-products-table tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 12px;
+        }
+
+        #order-products-table tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 12px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+            border-radius: 4px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-danger,
+        .btn-secondary {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 8px 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ed1c24 0%, #ff6b6b 100%);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(237, 28, 36, 0.5);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        @media (max-width: 768px) {
+            .orders-card {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            #order-products-table {
+                font-size: 12px;
+            }
+
+            #order-products-table thead th,
+            #order-products-table tbody td {
+                padding: 8px 6px;
+            }
         }
     </style>
 @endpush
 @section('content')
-    <div class="admin container py-2">
-        @include('admin.partials.sidebar')
-        <div class="admin main-content">
-            <form class="mt-5" action="{{ route('admin.order.update') }}" method="POST">
-                @csrf
-                <input type="hidden" name="id" value="{{ $order->id }}">
-                <div class="row mb-3">
-                    <div class="col">
-                        <label for="order_no" class="form-label align-self-end fw-bold">Order No : <span
-                                class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="order_no" id="order_no"
-                            value="{{ $order->order_no }}" autocomplete="off">
-                        @error('order_no')
-                            <span class="text-danger error-text" role="alert">
-                                {{ $message }}
-                            </span>
-                        @enderror
+    <div class="orders-page-wrapper">
+        <div class="admin container-fluid py-2">
+            @include('admin.partials.sidebar')
+            <div class="admin main-content p-4">
+                <div class="orders-card">
+                    <div class="page-header">
+                        <h1 class="page-title">
+                            <i class="fas fa-edit page-title-icon"></i>
+                            Edit Order
+                        </h1>
                     </div>
-                    <div class="col">
-                        <label for="order_date" class="form-label align-self-end fw-bold">Order Date : <span
-                                class="text-danger">*</span></label>
-                        <input type="text" class="form-control datepicker" name="order_date" id="order_date"
-                            value="{{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }}" readonly
-                            autocomplete="off">
-                        @error('order_date')
-                            <span class="text-danger error-text" role="alert">
-                                {{ $message }}
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="row mb-4">
-                    <div class="col">
-                        <label for="customer_name" class="form-label align-self-end fw-bold">Client : <span
-                                class="text-danger">*</span></label>
-                        <select class="form-select select2" name="user_id" data-placeholder="Select Client" id="client"
-                            aria-label="Default select example">
-                            @if ($users)
-                                <option selected value="">Select brand</option>
-                            @endif
-                            @forelse ($users as $user)
-                                <option value="{{ $user->id }}" @selected($user->id == $order->user_id)>{{ $user->name }}
-                                </option>
-                            @empty
-                                <option value="">No client found</option>
-                            @endforelse
-                        </select>
-                        @error('user_id')
-                            <span class="text-danger error-text" role="alert">
-                                {{ $message }}
-                            </span>
-                        @enderror
-                    </div>
-                    <div class="col">
-                        <label for="brand" class="form-label align-self-end fw-bold">Brand : <span
-                                class="text-danger">*</span></label>
-                        <select class="form-select select2" name="brand_id" data-placeholder="Select Brand" id="brand"
-                            aria-label="Default select example">
-                            @if ($brands)
-                                <option selected value="">Select brand</option>
-                            @endif
-                            @forelse ($brands as $brand)
-                                <option value="{{ $brand->id }}" @selected($brand->id == $order->category_id)>{{ $brand->title }}
-                                </option>
-                            @empty
-                                <option value="">No brand found</option>
-                            @endforelse
-                        </select>
-                        @error('brand_id')
-                            <span class="text-danger error-text" role="alert">
-                                {{ $message }}
-                            </span>
-                        @enderror
-                    </div>
-                </div>
 
+                    <form class="mt-2" action="{{ route('admin.order.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $order->id }}">
 
-                <table id="order-products-table" class="table mt-3 table-hover table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th scope="col"><input type="checkbox" id="select-all"></th>
-                            <th scope="col">Part No</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Main Product Name</th>
-                            <th scope="col">Product Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                
-                <div class="row mt-5">
-                    <div class="col">
-                        <button type="submit" class="btn btn-sm btn-primary text-white">Save</button>
-                        <input type="hidden" name="close" value="1" disabled>
-                        <button type="submit" onclick="$('input[name=close]').prop('disabled', false);"
-                        class="btn btn-sm btn-primary text-white">Save & Close</button>
-                        <a href="{{ route('admin.order.list') }}">
-                            <button type="button"
-                            class="btn btn-sm bg-danger text-white">Cancel</button>
-                        </a>
-                    </div>
-                   
-                    <div class="col text-end">
-                            <button type="button" id="delete-order" class="btn btn-sm btn-danger">Delete Order</button>
-                    </div>
+                        <div class="mb-3">
+                            <div class="form-section-title">Order Information</div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="order_no" class="form-label align-self-end">Order No : <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="order_no" id="order_no"
+                                    value="{{ $order->order_no }}" autocomplete="off">
+                                @error('order_no')
+                                    <span class="text-danger error-text" role="alert">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="order_date" class="form-label align-self-end">Order Date : <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control datepicker" name="order_date" id="order_date"
+                                    value="{{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }}" readonly
+                                    autocomplete="off">
+                                @error('order_date')
+                                    <span class="text-danger error-text" role="alert">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="customer_name" class="form-label align-self-end">Client : <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select select2" name="user_id" data-placeholder="Select Client"
+                                    id="client" aria-label="Default select example">
+                                    @if ($users)
+                                        <option selected value="">Select client</option>
+                                    @endif
+                                    @forelse ($users as $user)
+                                        <option value="{{ $user->id }}" @selected($user->id == $order->user_id)>{{ $user->name }}
+                                        </option>
+                                    @empty
+                                        <option value="">No client found</option>
+                                    @endforelse
+                                </select>
+                                @error('user_id')
+                                    <span class="text-danger error-text" role="alert">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="brand" class="form-label align-self-end">Brand : <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select select2" name="brand_id" data-placeholder="Select Brand"
+                                    id="brand" aria-label="Default select example">
+                                    @if ($brands)
+                                        <option selected value="">Select brand</option>
+                                    @endif
+                                    @forelse ($brands as $brand)
+                                        <option value="{{ $brand->id }}" @selected($brand->id == $order->category_id)>{{ $brand->title }}
+                                        </option>
+                                    @empty
+                                        <option value="">No brand found</option>
+                                    @endforelse
+                                </select>
+                                @error('brand_id')
+                                    <span class="text-danger error-text" role="alert">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="order-products-table" class="table mt-2 table-hover table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"><input type="checkbox" id="select-all"></th>
+                                        <th scope="col">Part No</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Main Product Name</th>
+                                        <th scope="col">Product Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row mt-4 align-items-center">
+                            <div class="col-md-8 mb-3 mb-md-0">
+                                <div class="action-buttons">
+                                    <button type="submit" class="btn btn-sm btn-primary text-white">Save</button>
+                                    <input type="hidden" name="close" value="1" disabled>
+                                    <button type="submit"
+                                        onclick="$('input[name=close]').prop('disabled', false);"
+                                        class="btn btn-sm btn-primary text-white">Save &amp; Close</button>
+                                    <a href="{{ route('admin.order.list') }}" class="btn btn-sm btn-secondary text-white">
+                                        Cancel
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 text-md-end">
+                                <button type="button" id="delete-order" class="btn btn-sm btn-danger">Delete Order</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -224,11 +444,11 @@
     <script>
         $(document).ready(function() {
 
-            var table_top_left_html = `<div class="row mt-5">
-                <div class="col">
+            var table_top_left_html = `<div class="row">
+                <div class="col d-flex gap-2 flex-wrap">
                     <button type="button" class="btn btn-sm btn-secondary text-white" data-bs-toggle="modal"
                         data-bs-target="#addProductModal">Create Order Product List</button>
-                    <button type="button" class="btn btn-sm bg-base text-white" id="delete-selected">Delete</button>
+                    <button type="button" class="btn btn-sm btn-danger" id="delete-selected">Delete</button>
                 </div>
             </div>`;
 
@@ -258,7 +478,7 @@
                     <"row mb-3"
                         <"col-md-6 align-content-end table-top-left">
                         <"col-md-6 text-end"
-                        <"d-inline-flex gap-2 mb-2 mt-5">
+                        <"d-inline-flex gap-2 mb-2">
                         f
                         >
                     >

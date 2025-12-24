@@ -13,7 +13,7 @@
     </style>
 @endpush
 @section('content')
-    <div class="admin container py-2">
+    <div class="admin container-fluid py-2">
         @include('admin.partials.sidebar')
         <div class="admin main-content p-4 table-responsive">
             <div class="row">

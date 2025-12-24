@@ -29,18 +29,32 @@ class ProductController extends Controller
                 }
             })
             ->addColumn('product_info', function ($row) {
-                 return '<a href="'.$row->ImageUrl.'" data-fancybox="gallery" data-caption="'.$row->product_code.' '.$row->title.'">
-                '.$row->product_code.' '.$row->title.'
-                </a>';
+                 return '<span>'.$row->product_code.' '.$row->title.'</span>';
             })
             ->addColumn('quantity', function ($row) {
                 return '<input type="text" onkeypress="return /[0-9]/i.test(event.key)" class="form-control" name="quantity[' . $row->product_code . ']" autocomplete="off"/>';
             })
             ->addColumn('action', function ($row) {
+                $imageUrl = $row->ImageUrl ?? '#';
+                $hasImage = $imageUrl && $imageUrl != '#';
+                
+                $viewImageBtn = $hasImage 
+                    ? '<a href="' . $imageUrl . '" class="btn btn-xs btn-view-image" data-fancybox="gallery" data-caption="' . $row->product_code . ' - ' . $row->title . '" title="View Image">
+                        <i class="fa fa-image"></i>
+                    </a>'
+                    : '<button class="btn btn-xs btn-no-image" disabled title="No Image Available">
+                        <i class="fa fa-image"></i>
+                    </button>';
+                
                 return '
-                <div class="d-flex gap-2">
-                    <button class="btn-add btn btn-sm btn-primary text-white" data-id="' . $row->id . '" data-product="' . $row->title . '" data-product-code="' . $row->product_code . '">Add</button>
-                    <button class="btn-remove btn btn-sm bg-base text-white" data-id="' . $row->id . '" data-product="' . $row->title . '" data-product-code="' . $row->product_code . '">Remove</button>
+                <div class="action-buttons-group">
+                    ' . $viewImageBtn . '
+                    <button class="btn-add btn btn-xs btn-add-cart" data-id="' . $row->id . '" data-product="' . $row->title . '" data-product-code="' . $row->product_code . '" title="Add to Cart">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <button class="btn-remove btn btn-xs btn-remove-cart" data-id="' . $row->id . '" data-product="' . $row->title . '" data-product-code="' . $row->product_code . '" title="Remove from Cart">
+                        <i class="fa fa-minus"></i>
+                    </button>
                 </div>
                 ';
             })
