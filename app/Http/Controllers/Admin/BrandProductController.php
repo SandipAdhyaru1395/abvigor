@@ -17,15 +17,27 @@ class BrandProductController extends Controller
 
     public function list()
     {
-        return view('admin.brand.product.list');
+        $brands = BrandCategory::orderBy('title', 'asc')->get();
+        return view('admin.brand.product.list', compact('brands'));
     }
 
 
     public function getBrandProducts(Request $request)
     {
-        $query = BrandProduct::select(['id', 'title', 'product_code'])->orderBy('id', 'desc');
+        $query = BrandProduct::with('Brand')->select(['id', 'title', 'product_code', 'category_id', 'display_order']);
+
+        // Filter by brand if provided
+        if ($request->has('brand_id') && $request->brand_id != '') {
+            $query->where('category_id', $request->brand_id);
+        }
+
+        // Order by display_order first, then by id
+        $query->orderBy('display_order', 'asc')->orderBy('id', 'asc');
 
         return datatables()->of($query)
+            ->addColumn('brand_name', function ($row) {
+                return $row->Brand ? $row->Brand->title : 'N/A';
+            })
             // ->filter(function ($query) use ($request) {
             //     if ($search = $request->get('search')['value']) {
             //         $query->where(function ($q) use ($search) {
@@ -80,11 +92,15 @@ class BrandProductController extends Controller
             'brand_id.required' => 'Brand is required',
         ]);
 
+        // Get the maximum display_order for this brand
+        $maxOrder = BrandProduct::where('category_id', $request->brand_id)->max('display_order') ?? 0;
+
         $brand_product = BrandProduct::create([
             'title' => $request->title,
             'slug' => $request->slug,
             'product_code' => $request->product_code,
             'category_id' => $request->brand_id,
+            'display_order' => $maxOrder + 1,
             'technical_specification' => $request->technical_specification
         ]);
 
@@ -245,5 +261,34 @@ class BrandProductController extends Controller
 
         Toastr::success('Deleted successfully');
         return redirect()->route('admin.brand.product.list');
+    }
+
+    /**
+     * Update product display order
+     */
+    public function updateOrder(Request $request)
+    {
+        $request->validate([
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'required|exists:chivalry_brand_product,id',
+        ]);
+
+        try {
+            foreach ($request->product_ids as $index => $productId) {
+                BrandProduct::where('id', $productId)->update([
+                    'display_order' => $index + 1
+                ]);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Product order updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Failed to update product order'
+            ], 500);
+        }
     }
 }

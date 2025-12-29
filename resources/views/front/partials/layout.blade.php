@@ -54,6 +54,12 @@
             font-size: 0.875rem !important;
         }
 
+        /* Prevent Bootstrap button hover color from being applied globally */
+        .btn:hover,
+        .btn:focus {
+            color: #ffffff !important;
+        }
+
         /* Hidden Checkbox */
         .sidebar-toggle-checkbox {
             display: none;

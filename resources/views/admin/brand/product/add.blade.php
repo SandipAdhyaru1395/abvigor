@@ -57,7 +57,6 @@
             padding: 8px 12px;
             font-size: 0.9rem;
             font-family: 'Segoe UI', sans-serif;
-            border: 1px solid #dfe6e9;
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
             transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
         }
@@ -125,7 +124,7 @@
         }
 
         .btn-secondary {
-            background: #95a5a6;
+            background: #5c636a;
         }
 
         #cke_notifications_area_technical_specification {

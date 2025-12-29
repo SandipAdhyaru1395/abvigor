@@ -63,7 +63,6 @@
             padding: 8px 12px;
             font-size: 0.9rem;
             font-family: 'Segoe UI', sans-serif;
-            border: 1px solid #dfe6e9;
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
             transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
         }
@@ -133,12 +132,137 @@
             font-size: 14px;
         }
 
+        /* Inline editable quantity */
+        .editable-qty {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+
+        .editable-qty:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Make the entire quantity td clickable */
+        #order-products-table tbody td:nth-child(4) {
+            cursor: pointer;
+            position: relative;
+        }
+
+        #order-products-table tbody td:nth-child(4):hover {
+            background-color: #f8f9fa;
+        }
+
+        .editable-qty.editing {
+            background-color: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: block !important;
+            width: 100% !important;
+            vertical-align: middle;
+        }
+
+        .qty-input {
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+            text-align: center;
+            border: 2px solid #667eea !important;
+            border-radius: 4px;
+            padding: 6px 8px !important;
+            font-size: 14px;
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: #fff !important;
+            margin: 0 !important;
+            display: block !important;
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
+
+        .qty-input:focus {
+            border-color: #667eea !important;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+            outline: none !important;
+        }
+
+        /* Ensure the td containing editable quantity allows full width input */
+        #order-products-table tbody td:has(.editable-qty.editing) {
+            padding: 12px 12px !important;
+        }
+
         #order-products-table tbody tr:last-child td:first-child {
             border-bottom-left-radius: 12px;
         }
 
         #order-products-table tbody tr:last-child td:last-child {
             border-bottom-right-radius: 12px;
+        }
+
+        /* Checkbox styles - with high specificity to prevent overrides */
+        #order-products-table input[type="checkbox"],
+        #order-products-table th input[type="checkbox"],
+        #order-products-table td input[type="checkbox"],
+        input[type="checkbox"].row-checkbox,
+        input[type="checkbox"]#select-all {
+            width: 18px !important;
+            height: 18px !important;
+            cursor: pointer !important;
+            accent-color: #667eea !important;
+            border-radius: 4px !important;
+        }
+
+        /* Center checkbox in header and cells */
+        #order-products-table thead th:first-child,
+        #order-products-table tbody td:first-child {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        /* Actions column styling */
+        #order-products-table tbody td:last-child {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        #order-products-table .delete-item {
+            padding: 6px 10px;
+            font-size: 14px;
+            background: transparent !important;
+            border: 1px solid transparent !important;
+            border-radius: 6px !important;
+            color: #dc3545 !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-width: 36px;
+            min-height: 36px;
+        }
+
+        #order-products-table .delete-item:hover {
+            background: rgba(220, 53, 69, 0.1) !important;
+            border-color: rgba(220, 53, 69, 0.3) !important;
+            color: #c82333 !important;
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+        }
+
+        #order-products-table .delete-item:active {
+            transform: scale(0.95);
+        }
+
+        #order-products-table .delete-item i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        #order-products-table .delete-item:hover i {
+            transform: rotate(-10deg) scale(1.1);
         }
 
         input[type="checkbox"] {
@@ -184,7 +308,7 @@
         }
 
         .btn-secondary {
-            background: #95a5a6;
+            background: #5c636a;
         }
 
         @media (max-width: 768px) {
@@ -226,7 +350,7 @@
                     <div class="page-header">
                         <h1 class="page-title">
                             <i class="fas fa-edit page-title-icon"></i>
-                            Edit Order
+                            Edit Order (#{{ $order->order_no }})
                         </h1>
                     </div>
 
@@ -234,22 +358,7 @@
                         @csrf
                         <input type="hidden" name="id" value="{{ $order->id }}">
 
-                        <div class="mb-3">
-                            <div class="form-section-title">Order Information</div>
-                        </div>
-
                         <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="order_no" class="form-label align-self-end">Order No : <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="order_no" id="order_no"
-                                    value="{{ $order->order_no }}" autocomplete="off">
-                                @error('order_no')
-                                    <span class="text-danger error-text" role="alert">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
                             <div class="col-md-6">
                                 <label for="order_date" class="form-label align-self-end">Order Date : <span
                                         class="text-danger">*</span></label>
@@ -262,8 +371,6 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="row mb-4">
                             <div class="col-md-6 mb-3 mb-md-0">
                                 <label for="customer_name" class="form-label align-self-end">Client : <span
                                         class="text-danger">*</span></label>
@@ -285,27 +392,6 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-6">
-                                <label for="brand" class="form-label align-self-end">Brand : <span
-                                        class="text-danger">*</span></label>
-                                <select class="form-select select2" name="brand_id" data-placeholder="Select Brand"
-                                    id="brand" aria-label="Default select example">
-                                    @if ($brands)
-                                        <option selected value="">Select brand</option>
-                                    @endif
-                                    @forelse ($brands as $brand)
-                                        <option value="{{ $brand->id }}" @selected($brand->id == $order->category_id)>{{ $brand->title }}
-                                        </option>
-                                    @empty
-                                        <option value="">No brand found</option>
-                                    @endforelse
-                                </select>
-                                @error('brand_id')
-                                    <span class="text-danger error-text" role="alert">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
                         </div>
 
                         <div class="table-responsive">
@@ -314,9 +400,11 @@
                                     <tr>
                                         <th scope="col"><input type="checkbox" id="select-all"></th>
                                         <th scope="col">Part No</th>
+                                        <th scope="col">Brand</th>
                                         <th scope="col">Quantity</th>
                                         <th scope="col">Main Product Name</th>
                                         <th scope="col">Product Name</th>
+                                        <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -359,19 +447,24 @@
                     <div class="row">
                         <div class="col-lg-6 mt-3">
                             <input type="hidden" name="id">
+                            <label>Brand : <span class="text-danger">*</span></label>
+                            <select class="form-select select2" name="edit_brand_id" data-placeholder="Select Brand"
+                                id="edit_brand_id" aria-label="Default select example">
+                                @if ($brands)
+                                    <option selected value="">Select brand</option>
+                                @endif
+                                @forelse ($brands as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->title }}</option>
+                                @empty
+                                    <option value="">No brand found</option>
+                                @endforelse
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-3">
                             <label>Product : <span class="text-danger">*</span></label>
                             <select class="form-select select2" name="edit_product_id" data-placeholder="Select Product"
                                 id="edit_product_id" aria-label="Default select example">
-                                @if ($products)
-                                    <option selected value="">Select product</option>
-                                @endif
-                                @forelse ($products as $product)
-                                    <option value="{{ $product->id }}">
-                                        {{ $product->product_code }} - {{ $product->title }}
-                                    </option>
-                                @empty
-                                    <option value="">No product found</option>
-                                @endforelse
+                                <option selected value="">Select product</option>
                             </select>
                         </div>
                         <div class="col-lg-6 mt-3">
@@ -405,19 +498,24 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-6 mt-3">
+                            <label>Brand : <span class="text-danger">*</span></label>
+                            <select class="form-select select2" name="add_brand_id" data-placeholder="Select Brand"
+                                id="add_brand_id" aria-label="Default select example">
+                                @if ($brands)
+                                    <option selected value="">Select brand</option>
+                                @endif
+                                @forelse ($brands as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->title }}</option>
+                                @empty
+                                    <option value="">No brand found</option>
+                                @endforelse
+                            </select>
+                        </div>
+                        <div class="col-lg-6 mt-3">
                             <label>Product : <span class="text-danger">*</span></label>
                             <select class="form-select select2" name="add_product_id" data-placeholder="Select Product"
                                 id="add_product_id" aria-label="Default select example">
-                                @if ($products)
-                                    <option selected value="">Select product</option>
-                                @endif
-                                @forelse ($products as $product)
-                                    <option value="{{ $product->id }}">
-                                        {{ $product->product_code }} - {{ $product->title }}
-                                    </option>
-                                @empty
-                                    <option value="">No product found</option>
-                                @endforelse
+                                <option selected value="">Select product</option>
                             </select>
                         </div>
                         <div class="col-lg-6 mt-3">
@@ -453,8 +551,13 @@
             </div>`;
 
 
-            $('#select-all').on('click', function() {
-                $('.row-checkbox').prop('checked', this.checked);
+            // Select all checkbox functionality
+            // Select all checkbox functionality will be initialized in initComplete and drawCallback
+            // Update select-all checkbox when individual checkboxes are clicked
+            $(document).on('change', '.row-checkbox', function() {
+                var totalCheckboxes = $('.row-checkbox').length;
+                var checkedCheckboxes = $('.row-checkbox:checked').length;
+                $('#select-all').prop('checked', totalCheckboxes === checkedCheckboxes && totalCheckboxes > 0);
             });
 
             $('#product').select2({
@@ -526,6 +629,7 @@
                 // ],
                 columns: [{
                         data: 'id',
+                        title: '<input type="checkbox" id="select-all">',
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
@@ -538,22 +642,149 @@
 
                     },
                     {
+                        data: 'brand',
+                    },
+                    {
                         data: 'qty',
+                        render: function(data, type, row) {
+                            if (type === 'display') {
+                                return `<span class="editable-qty" data-id="${row.id}" data-qty="${data}">${data}</span>`;
+                            }
+                            return data;
+                        }
                     },
                     {
                         data: 'main_product_name',
                     },
                     {
                         data: 'product_name',
+                    },
+                    {
+                        data: 'id',
+                        title: 'Actions',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `<button type="button" class="btn btn-sm delete-item text-danger" data-id="${data}" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>`;
+                        },
                     }
 
                 ],
                 initComplete: function() {
                     $('.table-top-left').prepend(table_top_left_html);
+                    // Re-initialize select-all checkbox after table is initialized
+                    $('#select-all').on('click', function() {
+                        $('.row-checkbox').prop('checked', this.checked);
+                    });
+                },
+                drawCallback: function() {
+                    // Re-initialize select-all checkbox after each draw
+                    $('#select-all').off('click').on('click', function() {
+                        $('.row-checkbox').prop('checked', this.checked);
+                    });
                 }
             });
 
-            $('#order-products-table tbody').on('click', 'tr td:not(:first-child)', function() {
+            // Store data for modal population
+            var editModalData = null;
+            var isSettingBrandProgrammatically = false;
+
+            // Inline quantity editing - make entire td clickable
+            $(document).on('click', '#order-products-table tbody td:nth-child(4)', function(e) {
+                // Don't trigger if clicking on input or if already editing
+                if ($(e.target).hasClass('qty-input') || $(e.target).closest('.qty-input').length) {
+                    return;
+                }
+                
+                var $td = $(this);
+                var $editableQty = $td.find('.editable-qty');
+                
+                // Don't edit if already editing
+                if ($editableQty.hasClass('editing')) {
+                    return;
+                }
+                
+                e.stopPropagation(); // Prevent row click
+                
+                var currentQty = $editableQty.data('qty');
+                var productId = $editableQty.data('id');
+                var originalText = $editableQty.text();
+                
+                $editableQty.addClass('editing');
+                var input = $('<input>', {
+                    type: 'number',
+                    class: 'qty-input',
+                    value: currentQty,
+                    min: 1
+                });
+                
+                // Replace content with input
+                $editableQty.html(input);
+                input.focus().select();
+                
+                input.on('blur', function() {
+                    var newQty = parseInt($(this).val()) || 0;
+                    if (newQty != currentQty && newQty > 0) {
+                        updateQuantity(productId, newQty);
+                    } else {
+                        $editableQty.removeClass('editing').text(originalText);
+                    }
+                });
+                
+                input.on('keypress', function(e) {
+                    if (e.which === 13) { // Enter key
+                        e.preventDefault();
+                        $(this).blur();
+                    }
+                    if (e.which === 27) { // Escape key
+                        e.preventDefault();
+                        $editableQty.removeClass('editing').text(originalText);
+                        input.remove();
+                    }
+                });
+                
+                // Prevent click event from bubbling
+                input.on('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+
+            // Update quantity inline
+            function updateQuantity(productId, newQty) {
+                $.ajax({
+                    url: "{{ route('admin.order.product.updateQty', ':id') }}".replace(':id', productId),
+                    type: 'GET',
+                    data: { qty: newQty },
+                    success: function() {
+                        toastr.success('Quantity updated successfully');
+                        table.ajax.reload();
+                    },
+                    error: function() {
+                        toastr.error('Error updating quantity');
+                        table.ajax.reload();
+                    }
+                });
+            }
+
+            $('#order-products-table tbody').on('click', 'tr td:not(:first-child)', function(e) {
+                // Don't open modal if clicking delete button or actions column
+                if ($(e.target).hasClass('delete-item') || 
+                    $(e.target).closest('.delete-item').length ||
+                    $(e.target).closest('button').length) {
+                    return;
+                }
+                // Don't open modal if clicking quantity column (4th column, index 3)
+                if ($(this).index() === 3) {
+                    return;
+                }
+                if ($(e.target).hasClass('editable-qty') || 
+                    $(e.target).closest('.editable-qty').length || 
+                    $(e.target).hasClass('qty-input') ||
+                    $(e.target).closest('.qty-input').length) {
+                    return; // Don't open modal if clicking quantity
+                }
 
                 const row = $(this).closest('tr');
                 const id = row.find('.row-checkbox').val();
@@ -563,32 +794,128 @@
                     type: 'GET',
                     success: function(response) {
                         if (response.status == true) {
-                            var orderProduct = response.orderProduct;
-                            var product = response.product;
-
-                            $('#editProductModal').find('[name="id"]').val(id);
-
-                            $('#editProductModal').find('select[name="edit_product_id"]').val(
-                                orderProduct.product_id).trigger('change');
-                            $('#editProductModal').find('[name="edit_quantity"]').val(
-                                orderProduct
-                                .qty);
-
-                            if (orderProduct.product_name != product.title) {
-                                $('#edit_old_product_name').val(orderProduct.product_name);
-                            }
+                            editModalData = {
+                                id: id,
+                                orderProduct: response.orderProduct,
+                                product: response.product
+                            };
+                            $('#editProductModal').modal('show');
+                        } else {
+                            toastr.error('Failed to load product data');
                         }
+                    },
+                    error: function() {
+                        toastr.error('Error loading product data');
                     }
                 });
-
-                $('#editProductModal').modal('show');
             });
 
+            // Handle modal shown event to populate data
             $('#editProductModal').on('shown.bs.modal', function() {
-                $(this).find('.select2').select2({
-                    dropdownParent: $('#editProductModal')
+                var modal = $(this);
+                
+                // Destroy existing select2 instances if any
+                if ($('#edit_brand_id').hasClass('select2-hidden-accessible')) {
+                    $('#edit_brand_id').select2('destroy');
+                }
+                if ($('#edit_product_id').hasClass('select2-hidden-accessible')) {
+                    $('#edit_product_id').select2('destroy');
+                }
+                
+                // Initialize select2 for all select2 elements in modal
+                modal.find('.select2').select2({
+                    dropdownParent: modal
                 });
+
+                // Populate data if available
+                if (editModalData) {
+                    var orderProduct = editModalData.orderProduct;
+                    var product = editModalData.product;
+
+                    // Clear and set basic values
+                    modal.find('[name="id"]').val(editModalData.id);
+                    $('#edit_quantity').val(orderProduct.qty || '');
+                    $('#edit_old_product_name').val(product && orderProduct.product_name && orderProduct.product_name != product.title ? orderProduct.product_name : '');
+
+                    // Get brand ID - prefer Brand.id, fallback to category_id
+                    var brandId = (product && product.Brand && product.Brand.id) ? product.Brand.id : (orderProduct.category_id || null);
+
+                    if (brandId) {
+                        // Set flag to prevent change event handler from firing
+                        isSettingBrandProgrammatically = true;
+                        $('#edit_brand_id').val(brandId).trigger('change');
+                        // Reset flag after a short delay
+                        setTimeout(function() {
+                            isSettingBrandProgrammatically = false;
+                        }, 100);
+                        // Load products with selected product (only once)
+                        setTimeout(function() {
+                            loadProductsForBrand(brandId, '#edit_product_id', orderProduct.product_id);
+                        }, 200);
+                    } else {
+                        // Clear if no brand
+                        $('#edit_brand_id').val(null).trigger('change');
+                        $('#edit_product_id').html('<option value="">Select product</option>').trigger('change');
+                    }
+                    
+                    // Clear the stored data
+                    editModalData = null;
+                }
             });
+
+            // Function to load products based on brand
+            function loadProductsForBrand(brandId, productSelectId, selectedProductId = null) {
+                if (!brandId) {
+                    $(productSelectId).html('<option value="">Select product</option>').trigger('change');
+                    return;
+                }
+
+                // Show loading state
+                var $select = $(productSelectId);
+                $select.html('<option value="">Loading...</option>').trigger('change');
+
+                $.ajax({
+                    url: "{{ route('admin.order.products.by.brand') }}",
+                    type: 'GET',
+                    data: { brand_id: brandId },
+                    success: function(response) {
+                        if (!response.data || response.data.length === 0) {
+                            $select.html('<option value="">No products found</option>').trigger('change');
+                            return;
+                        }
+
+                        // Build options string efficiently
+                        var options = ['<option value="">Select product</option>'];
+                        response.data.forEach(function(product) {
+                            var selected = (selectedProductId && product.id == selectedProductId) ? ' selected' : '';
+                            var displayText = (product.product_code ? product.product_code + ' - ' : '') + product.title;
+                            options.push('<option value="' + product.id + '"' + selected + '>' + displayText + '</option>');
+                        });
+                        
+                        $select.html(options.join('')).trigger('change');
+                    },
+                    error: function(xhr, status, error) {
+                        $select.html('<option value="">Error loading products</option>').trigger('change');
+                    }
+                });
+            }
+
+            // Handle brand change in edit modal
+            $('#edit_brand_id').on('change', function() {
+                // Skip if we're programmatically setting the value
+                if (isSettingBrandProgrammatically) {
+                    return;
+                }
+                var brandId = $(this).val();
+                loadProductsForBrand(brandId, '#edit_product_id');
+            });
+
+            // Handle brand change in add modal
+            $('#add_brand_id').on('change', function() {
+                var brandId = $(this).val();
+                loadProductsForBrand(brandId, '#add_product_id');
+            });
+
 
             $('#addProductModal').on('shown.bs.modal', function() {
                 $(this).find('.select2').select2({
@@ -598,19 +925,28 @@
 
             $('#addProductModal').on('hidden.bs.modal', function() {
                 $(this).find('input').val('');
-                $(this).find('.select2').val(null).trigger('change');
+                $('#add_brand_id').val(null).trigger('change');
+                $('#add_product_id').html('<option value="">Select product</option>').trigger('change');
             });
 
             $('#editProductModal').on('hidden.bs.modal', function() {
                 $(this).find('input').val('');
-                $(this).find('.select2').val(null).trigger('change');
+                $('#edit_brand_id').val(null).trigger('change');
+                $('#edit_product_id').html('<option value="">Select product</option>').trigger('change');
+                // Clear stored data
+                editModalData = null;
             });
 
             $('#create').click(function() {
+                var brand_id = $('#add_brand_id').val();
                 var product_id = $('#add_product_id').val();
                 var quantity = $('#add_quantity').val();
                 var old_product_name = $('#add_old_product_name').val();
 
+                if (brand_id == "" || brand_id == null) {
+                    toastr.error('Please select brand');
+                    return false;
+                }
                 if (product_id == "" || product_id == null) {
                     toastr.error('Please select product');
                     return false;
@@ -649,11 +985,15 @@
             $('#update').click(function() {
 
                 var id = $('#editProductModal').find('[name="id"]').val();
-                var order_product_id = $('#order_product_id').val();
+                var brand_id = $('#edit_brand_id').val();
                 var product_id = $('#edit_product_id').val();
                 var quantity = $('#edit_quantity').val();
                 var old_product_name = $('#edit_old_product_name').val();
 
+                if (brand_id == "" || brand_id == null) {
+                    toastr.error('Please select brand');
+                    return false;
+                }
                 if (product_id == "" || product_id == null) {
                     toastr.error('Please select product');
                     return false;
@@ -725,6 +1065,52 @@
                                     icon: 'success',
                                     title: 'Deleted!',
                                     text: 'Selected products have been deleted.',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Something went wrong while deleting.',
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Delete individual order product
+            $(document).on('click', '.delete-item', function(e) {
+                e.stopPropagation(); // Prevent row click
+                const id = $(this).data('id');
+                const ids = [id];
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This will delete this product from the order.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e3342f',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('admin.order.products.delete') }}',
+                            method: 'POST',
+                            data: {
+                                ids: ids,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                table.ajax.reload();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: 'Product has been deleted from the order.',
                                     timer: 2000,
                                     showConfirmButton: false
                                 });

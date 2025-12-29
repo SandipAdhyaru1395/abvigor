@@ -10,6 +10,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use App\Http\Requests\LoginFormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Services\MailService;
 
 class UserController extends Controller
 {
@@ -131,6 +132,18 @@ class UserController extends Controller
             'email' => $input['email'],
             'username' => $input['email'],
         ]);
+
+        // Refresh user to get latest data
+        $user->refresh();
+
+        // Send email notifications
+        try {
+            $mailService = new MailService();
+            $mailService->sendProfileUpdateEmails($user);
+        } catch (\Exception $e) {
+            // Log error but don't fail the profile update
+            \Illuminate\Support\Facades\Log::error('Failed to send profile update emails: ' . $e->getMessage());
+        }
 
         Toastr::success('Profile updated successfully');
         return redirect()->route('profile.get');

@@ -29,12 +29,6 @@
                         </div>
                         <div class="detail-row">
                             <div class="detail-label">
-                                <i class="fa fa-truck"></i> Tractor Brand
-                            </div>
-                            <div class="detail-value">{{ $order->brand->title }}</div>
-                        </div>
-                        <div class="detail-row">
-                            <div class="detail-label">
                                 <i class="fa fa-calendar"></i> Order Date
                             </div>
                             <div class="detail-value">{{ date('d-m-Y', strtotime($order->created_at)) }}</div>
@@ -57,6 +51,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Product Code</th>
+                                    <th scope="col">Brand</th>
                                     <th scope="col">Product Title</th>
                                     <th scope="col">Quantity</th>
                                 </tr>
@@ -66,6 +61,7 @@
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td><strong>{{ $product->product->product_code }}</strong></td>
+                                        <td>{{ $product->product->Brand->title ?? 'N/A' }}</td>
                                         <td>{{ $product->product->title }}</td>
                                         <td>{{ $product->qty }}</td>
                                     </tr>

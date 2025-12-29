@@ -18,7 +18,6 @@
                         <thead>
                             <tr>
                                 <th scope="col">Order Number</th>
-                                <th scope="col">Tractor Brand</th>
                                 <th scope="col">Order Date</th>
                                 <th scope="col">Order Time</th>
                                 <th scope="col">Action</th>
@@ -28,7 +27,6 @@
                             @forelse ($orders as $order)
                                 <tr>
                                     <td><strong>{{ $order->order_no }}</strong></td>
-                                    <td>{{ $order->brand->title }}</td>
                                     <td>{{ date('d/m/Y', strtotime($order->created_at)) }}</td>
                                     <td>{{ date('h:i A', strtotime($order->created_at)) }}</td>
                                     <td>
@@ -41,7 +39,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center no-records">
+                                    <td colspan="4" class="text-center no-records">
                                         <i class="fa fa-inbox"></i>
                                         <p>No Records Found</p>
                                     </td>

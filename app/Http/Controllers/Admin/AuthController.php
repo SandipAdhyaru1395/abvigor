@@ -19,7 +19,12 @@ class AuthController extends Controller
 
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $products = \App\Models\BrandProduct::select('id', 'title', 'product_code')->orderBy('title', 'asc')->get();
+        $users = \App\Models\User::select('id', 'name', 'email')->orderBy('name', 'asc')->get();
+        $states = \App\Models\User::select('state')->distinct()->whereNotNull('state')->where('state', '!=', '')->orderBy('state', 'asc')->pluck('state');
+        $brands = \App\Models\BrandCategory::select('id', 'title')->orderBy('title', 'asc')->get();
+        
+        return view('admin.dashboard', compact('products', 'users', 'states', 'brands'));
     }
 
     public function login(AdminLoginFormRequest $request)

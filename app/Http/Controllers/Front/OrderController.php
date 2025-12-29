@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\BrandCategory;
 use App\Models\BrandProduct;
+use App\Models\Cart;
+use App\Models\CartItem;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -27,7 +29,7 @@ class OrderController extends Controller
 
     public function get($id)
     {
-        $order = Order::whereId($id)->where('user_id', Auth::user()->id)->first();
+        $order = Order::with(['products.product.Brand'])->whereId($id)->where('user_id', Auth::user()->id)->first();
        
         if (empty($order)) {
 
@@ -35,7 +37,6 @@ class OrderController extends Controller
             
             return redirect()->route('order.list');
         }
-        // dd($order->products[0]->product);
         return view('front.order.view', compact('order'));
 
     }
@@ -66,85 +67,63 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
 
-            $input = $request->only('cart');
-            $cart = json_decode($input['cart'], true); // decode as associative array
+            $user = Auth::user();
+            $cart = Cart::where('user_id', $user->id)->first();
 
-            $validator = Validator::make(['cart' => $cart], [
-                'cart.*.id' => 'required',
-                'cart.*.quantity' => 'required'
-            ]);
+            if (!$cart) {
+                return response()->json(['status' => false, 'message' => 'Cart is empty']);
+            }
 
-            if ($validator->fails()) {
-                return response()->json(['status' => false, 'errors' => $validator->errors()]);
+            $cartItems = CartItem::with(['product.Brand'])
+                ->where('cart_id', $cart->id)
+                ->get();
+
+            if ($cartItems->isEmpty()) {
+                return response()->json(['status' => false, 'message' => 'Cart is empty']);
             }
 
             $lastOrder = Order::latest('id')->first();
             $generatedOrderNo = $lastOrder ? $lastOrder->order_no + 1 : 1;
 
-            $user = Auth::user();
+            // Create a single order for all items
+            $order = Order::create([
+                'order_no' => $generatedOrderNo,
+                'email' => $user->email,
+                'user_id' => $user->id,
+                'order_date' => now(),
+            ]);
 
-            // Step 1: Organize cart items by category
-            $grouped = collect($cart)->groupBy(function ($item) {
-                $product = BrandProduct::find($item['id']);
-                return $product->category_id;
-            });
+            // Add all products to the single order
+            foreach ($cartItems as $cartItem) {
+                $product = $cartItem->product;
 
-            // Store all created orders for mailing
-            $createdOrders = [];
-
-            // Step 2: Loop through each category group
-            foreach ($grouped as $categoryId => $items) {
-
-                $firstProduct = BrandProduct::find($items[0]['id']); // sample product for category info
-
-                // Create one order per category
-                $order = Order::create([
-                    'order_no' => $generatedOrderNo++,
-                    'email' => $user->email,
-                    'user_id' => $user->id,
-                    'category_id' => $categoryId,
-                    'brand_name' => $firstProduct->brand->title,
-                    'order_date' => now(),
+                $order->products()->create([
+                    'product_id' => $product->id,
+                    'order_number' => $order->order_no,
+                    'user_email' => $user->email,
+                    'qty' => $cartItem->quantity,
+                    'category_id' => $product->category_id ?? null,
+                    'category_title' => $product->Brand ? $product->Brand->title : '',
+                    'product_name' => $product->title,
                 ]);
-
-                $orderItems = [];
-
-                // Add products to that order
-                foreach ($items as $item) {
-                    $product = BrandProduct::find($item['id']);
-
-                    $orderItem = $order->products()->create([
-                        'product_id' => $product->id,
-                        'order_number' => $order->order_no,
-                        'user_email' => $user->email,
-                        'qty' => $item['quantity'],
-                        'category_title' => $product->brand->title,
-                        'product_name' => $product->title,
-                    ]);
-
-                    $orderItems[] = $orderItem;
-                }
-
-                // Store for email
-                $createdOrders[] = [
-                    'order' => $order,
-                    'items' => $orderItems
-                ];
             }
 
-            // Send mail for each created order
-            foreach ($createdOrders as $data) {
-                $mailService->sendOrderEmails($user, $data['order'], $data['items']);
-            }
+            // Clear cart after order is placed
+            CartItem::where('cart_id', $cart->id)->delete();
+
+            // Load relationships for email
+            $order->load('products.product.Brand');
+
+            // Send email for the single order
+            $mailService->sendOrderEmails($user, $order, $order->products);
 
             DB::commit();
             return response()->json(['status' => true, 'message' => 'Order placed successfully.']);
 
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
             DB::rollBack();
-            return response()->json(['status' => false, 'errors' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
-
     }
 }

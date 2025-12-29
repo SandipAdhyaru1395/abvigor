@@ -6,11 +6,14 @@ use App\Http\Controllers\Admin\AuthController as AdminController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProductController;
+use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\BrandProductController as AdminBrandProductController;
 use App\Http\Controllers\Admin\CatalogProductController as AdminCatalogProductController;
 use App\Http\Controllers\Admin\BrandCategoryController as AdminBrandCategoryController;
 use App\Http\Controllers\Admin\CatalogCategoryController as AdminCatalogCategoryController;
+use App\Http\Controllers\Admin\AnalysisController;
+use App\Http\Controllers\Admin\SettingsController;
 
 Route::get('/', function () {
     return view('front.login');
@@ -37,6 +40,13 @@ Route::group(['middleware' => ['auth.user']], function () {
     Route::post('/orders/store', [OrderController::class, 'store'])->name('order.store');
 
     Route::get('/products', [ProductController::class, 'list'])->name('product.list');
+
+    // Cart routes
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/cart/get', [CartController::class, 'get'])->name('cart.get');
+    Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
     Route::get('/profile', [UserController::class, 'getProfile'])->name('profile.get');
 
@@ -76,6 +86,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/orders/product/list', [AdminOrderController::class, 'getOrderProducts'])->name('order.product.list');
 
+        Route::get('/orders/products/by-brand', [AdminOrderController::class, 'getProductsByBrand'])->name('order.products.by.brand');
+
         Route::post('/orders/update', [AdminOrderController::class, 'update'])->name('order.update');
 
         Route::get('/orders/product/update/quantity/{orderProductId}', [AdminOrderController::class, 'updteOrderProductQty'])->name('order.product.updateQty');
@@ -85,6 +97,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/orders/add', [AdminOrderController::class, 'add'])->name('order.add');
 
         Route::post('/orders/store', [AdminOrderController::class, 'store'])->name('order.store');
+
+        Route::get('/orders/generate-order-number', [AdminOrderController::class, 'getNextOrderNumber'])->name('order.generate.number');
+
+        Route::get('/orders/search-users', [AdminOrderController::class, 'searchUsers'])->name('order.search.users');
 
         // Route::get('/products', [AdminProductController::class, 'getProducts'])->name('get.products');
 
@@ -129,6 +145,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/brands/products/list', [AdminBrandProductController::class, 'list'])->name('brand.product.list');
 
         Route::get('/brands/products', [AdminBrandProductController::class, 'getBrandProducts'])->name('get.brand.products');
+        Route::post('/brands/products/update-order', [AdminBrandProductController::class, 'updateOrder'])->name('brand.products.update.order');
 
         Route::get('/brands/products/add', [AdminBrandProductController::class, 'add'])->name('brand.product.add');
 
@@ -144,45 +161,48 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/brands/products/delete/{brandId}', [AdminBrandProductController::class, 'delete'])->name('brand.product.delete');
 
-        Route::get('/catalogs/categories/list', [AdminCatalogCategoryController::class, 'list'])->name('catalog.category.list');
+        // Route::get('/catalogs/categories/list', [AdminCatalogCategoryController::class, 'list'])->name('catalog.category.list');
 
-        Route::get('/catalogs/categories/add', [AdminCatalogCategoryController::class, 'add'])->name('catalog.category.add');
+        // Route::get('/catalogs/categories/add', [AdminCatalogCategoryController::class, 'add'])->name('catalog.category.add');
 
-        Route::get('/catalogs/categories', [AdminCatalogCategoryController::class, 'getCatalogCategories'])->name('get.catalog.categories');
+        // Route::get('/catalogs/categories', [AdminCatalogCategoryController::class, 'getCatalogCategories'])->name('get.catalog.categories');
 
-        Route::post('/catalogs/categories/delete', [AdminCatalogCategoryController::class, 'deleteMultiple'])->name('catalog.categories.delete');
+        // Route::post('/catalogs/categories/delete', [AdminCatalogCategoryController::class, 'deleteMultiple'])->name('catalog.categories.delete');
 
-        Route::get('/catalogs/categories/edit/{categoryId}', [AdminCatalogCategoryController::class, 'edit'])->name('catalog.category.edit');
+        // Route::get('/catalogs/categories/edit/{categoryId}', [AdminCatalogCategoryController::class, 'edit'])->name('catalog.category.edit');
 
-        Route::post('/catalogs/categories/store', [AdminCatalogCategoryController::class, 'store'])->name('catalog.category.store');
+        // Route::post('/catalogs/categories/store', [AdminCatalogCategoryController::class, 'store'])->name('catalog.category.store');
 
-        Route::post('/catalogs/categories/update', [AdminCatalogCategoryController::class, 'update'])->name('catalog.category.update');
+        // Route::post('/catalogs/categories/update', [AdminCatalogCategoryController::class, 'update'])->name('catalog.category.update');
 
-        Route::get('/catalogs/categories/delete/{categoryId}', [AdminCatalogCategoryController::class, 'delete'])->name('catalog.category.delete');
+        // Route::get('/catalogs/categories/delete/{categoryId}', [AdminCatalogCategoryController::class, 'delete'])->name('catalog.category.delete');
 
-        Route::get('/catalogs/products/list', [AdminCatalogProductController::class, 'list'])->name('catalog.product.list');
+        // Route::get('/catalogs/products/list', [AdminCatalogProductController::class, 'list'])->name('catalog.product.list');
 
-        Route::get('/catalogs/products', [AdminCatalogProductController::class, 'getCatalogProducts'])->name('get.catalog.products');
+        // Route::get('/catalogs/products', [AdminCatalogProductController::class, 'getCatalogProducts'])->name('get.catalog.products');
 
-        Route::get('/catalogs/products/add', [AdminCatalogProductController::class, 'add'])->name('catalog.product.add');
+        // Route::get('/catalogs/products/add', [AdminCatalogProductController::class, 'add'])->name('catalog.product.add');
 
-        Route::post('/catalogs/products/delete', [AdminCatalogProductController::class, 'deleteMultiple'])->name('catalog.products.delete');
+        // Route::post('/catalogs/products/delete', [AdminCatalogProductController::class, 'deleteMultiple'])->name('catalog.products.delete');
 
-        Route::get('/catalogs/products/edit/{productId}', [AdminCatalogProductController::class, 'edit'])->name('catalog.product.edit');
+        // Route::get('/catalogs/products/edit/{productId}', [AdminCatalogProductController::class, 'edit'])->name('catalog.product.edit');
 
-        Route::post('/catalogs/products/store', [AdminCatalogProductController::class, 'store'])->name('catalog.product.store');
+        // Route::post('/catalogs/products/store', [AdminCatalogProductController::class, 'store'])->name('catalog.product.store');
 
-        Route::post('/catalogs/products/update', [AdminCatalogProductController::class, 'update'])->name('catalog.product.update');
+        // Route::post('/catalogs/products/update', [AdminCatalogProductController::class, 'update'])->name('catalog.product.update');
 
-        Route::get('/catalogs/products/delete/{brandId}', [AdminCatalogProductController::class, 'delete'])->name('catalog.product.delete');
+        // Route::get('/catalogs/products/delete/{brandId}', [AdminCatalogProductController::class, 'delete'])->name('catalog.product.delete');
 
         Route::get('/profile/get', [AdminController::class, 'getProfile'])->name(name: 'get.profile');
 
         Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name(name: 'profile.update');
 
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+        Route::get('/analysis/data', [AnalysisController::class, 'getAnalysisData'])->name('analysis.data');
+
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::post('/settings/update', [SettingsController::class, 'update'])->name('settings.update');
 
     });
 

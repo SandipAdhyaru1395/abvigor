@@ -55,7 +55,6 @@
             padding: 8px 12px;
             font-size: 0.9rem;
             font-family: 'Segoe UI', sans-serif;
-            border: 1px solid #dfe6e9;
             box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
             background-color: #f9fafb;
         }
@@ -86,7 +85,7 @@
         }
 
         .btn-secondary {
-            background: #95a5a6;
+            background: #5c636a;
         }
 
         @media (max-width: 768px) {

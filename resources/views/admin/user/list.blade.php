@@ -210,42 +210,47 @@
         /* Explicit column widths so they always take effect */
         #users-table thead th:nth-child(1),
         #users-table tbody td:nth-child(1) {
-            width: 5% !important;
+            width: 4% !important;
         }
 
         #users-table thead th:nth-child(2),
         #users-table tbody td:nth-child(2) {
-            width: 7% !important;
+            width: 5% !important;
         }
 
         #users-table thead th:nth-child(3),
         #users-table tbody td:nth-child(3) {
-            width: 12% !important; /* username */
+            width: 10% !important; /* username */
         }
 
         #users-table thead th:nth-child(4),
         #users-table tbody td:nth-child(4) {
-            width: 20% !important; /* name */
+            width: 15% !important; /* name */
         }
 
         #users-table thead th:nth-child(5),
         #users-table tbody td:nth-child(5) {
-            width: 19% !important; /* email */
+            width: 15% !important; /* email */
         }
 
         #users-table thead th:nth-child(6),
         #users-table tbody td:nth-child(6) {
-            width: 10% !important; /* phone */
+            width: 8% !important; /* phone */
         }
 
         #users-table thead th:nth-child(7),
         #users-table tbody td:nth-child(7) {
-            width: 12% !important; /* registered */
+            width: 15% !important; /* dealership name */
         }
 
         #users-table thead th:nth-child(8),
         #users-table tbody td:nth-child(8) {
-            width: 14% !important; /* last seen */
+            width: 10% !important; /* registered */
+        }
+
+        #users-table thead th:nth-child(9),
+        #users-table tbody td:nth-child(9) {
+            width: 10% !important; /* last seen */
         }
 
         #users-table tbody tr:last-child td:first-child {
@@ -534,6 +539,7 @@
                                     <th scope="col">NAME</th>
                                     <th scope="col">EMAIL</th>
                                     <th scope="col">MOBILE</th>
+                                    <th scope="col">DEALERSHIP NAME</th>
                                     <th scope="col">REGISTERED</th>
                                     <th scope="col">LAST SEEN</th>
                                 </tr>
@@ -662,23 +668,27 @@
                     },
                     {
                         data: 'id',
-                        width: '7%',
+                        width: '5%',
                     },
                     {
                         data: 'username',
-                        width: '15%', // slightly decreased
+                        width: '10%',
                     },
                     {
                         data: 'name',
-                        width: '20%', // slightly increased
+                        width: '15%',
                     },
                     {
                         data: 'email',
-                        width: '15%', // slightly decreased
+                        width: '15%',
                     },
                     {
                         data: 'phone',
-                        width: '10%',
+                        width: '8%',
+                    },
+                    {
+                        data: 'dealership_name',
+                        width: '15%',
                     },
                     {
                         data: 'created_at',

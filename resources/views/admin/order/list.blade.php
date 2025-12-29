@@ -320,6 +320,49 @@
             color: #999;
             font-style: italic;
         }
+
+        /* Actions Column Styling */
+        #orders-table tbody td:last-child {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        #orders-table .delete-item {
+            padding: 6px 10px;
+            font-size: 14px;
+            background: transparent !important;
+            border: 1px solid transparent !important;
+            border-radius: 6px !important;
+            color: #dc3545 !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-width: 36px;
+            min-height: 36px;
+        }
+
+        #orders-table .delete-item:hover {
+            background: rgba(220, 53, 69, 0.1) !important;
+            border-color: rgba(220, 53, 69, 0.3) !important;
+            color: #c82333 !important;
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+        }
+
+        #orders-table .delete-item:active {
+            transform: scale(0.95);
+        }
+
+        #orders-table .delete-item i {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        #orders-table .delete-item:hover i {
+            transform: rotate(-10deg) scale(1.1);
+        }
     </style>
 @endpush
 @section('content')
@@ -343,8 +386,8 @@
                                     <th scope="col">Order Number</th>
                                     <th scope="col">Order Date</th>
                                     <th scope="col">Client</th>
-                                    <th scope="col">Brand</th>
                                     <th scope="col">Created At</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -407,35 +450,35 @@
                         extend: 'copyHtml5',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:last-child)'
                         }
                     },
                     {
                         extend: 'excelHtml5',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:last-child)'
                         }
                     },
                     {
                         extend: 'csvHtml5',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:last-child)'
                         }
                     },
                     {
                         extend: 'pdfHtml5',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:last-child)'
                         }
                     },
                     {
                         extend: 'print',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:last-child)'
                         }
                     }
                 ],
@@ -461,10 +504,17 @@
                         data: 'client',
                     },
                     {
-                        data: 'brand',
+                        data: 'created_at',
                     },
                     {
-                        data: 'created_at',
+                        data: 'id',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `<button type="button" class="btn btn-sm delete-item text-danger delete-order-btn" data-id="${data}" title="Delete Order">
+                                        <i class="fas fa-trash"></i>
+                                    </button>`;
+                        },
                     },
 
                 ],
@@ -528,10 +578,62 @@
                 });
             });
 
-            $('#orders-table tbody').on('click', 'tr td:not(:first-child)', function() {
+            // Handle row click to edit (exclude checkbox and actions column)
+            $('#orders-table tbody').on('click', 'tr td:not(:first-child):not(:last-child)', function(e) {
+                // Don't navigate if clicking on a button or link
+                if ($(e.target).is('button, a, input') || $(e.target).closest('button, a, input').length) {
+                    return;
+                }
                 const row = $(this).closest('tr');
                 const id = row.find('.row-checkbox').val();
                 window.location.href = '{{ route('admin.order.edit', ':id') }}'.replace(':id', id);
+            });
+
+            // Handle individual delete button click
+            $(document).on('click', '.delete-order-btn', function(e) {
+                e.stopPropagation(); // Prevent row click event
+                const id = $(this).data('id');
+                const orderNo = $(this).closest('tr').find('td:eq(1)').text().trim();
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `This will permanently delete order "${orderNo}".`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e3342f',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('admin.orders.delete') }}',
+                            method: 'POST',
+                            data: {
+                                ids: [id],
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                $('#orders-table').DataTable().ajax.reload();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: 'Order has been deleted.',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                });
+                                $('#select-all').prop('checked', false);
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Something went wrong while deleting.',
+                                });
+                            }
+                        });
+                    }
+                });
             });
 
             // table.column(1).visible(false);

@@ -66,6 +66,116 @@
             font-size: 0.875rem !important;
         }
 
+        /* Global Select2 Styling to match form controls height */
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: auto !important;
+            min-height: 38px;
+            border: 1px solid #adb5bd;
+            border-radius: 8px;
+            padding: 0;
+            font-size: 0.9rem;
+            font-family: 'Segoe UI', sans-serif;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 1.5;
+            padding: 8px 12px;
+            color: #212529;
+            width: 100%;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 100%;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Select2 Clear Button Styling */
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            cursor: pointer;
+            font-weight: bold;
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 24px;
+            width: 24px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 22px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear:hover {
+            color: #333;
+        }
+
+        /* Adjust arrow position when clear button is present */
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            padding-right: 50px;
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--single,
+        .select2-container--default.select2-container--open .select2-selection--single {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+            outline: none;
+        }
+
+        .select2-container--default .select2-selection--single:hover {
+            border-color: #adb5bd;
+        }
+
+        /* Select2 Dropdown Styling */
+        .select2-dropdown {
+            border: 1px solid #adb5bd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 4px;
+        }
+
+        .select2-container--default .select2-results__option {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #667eea;
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            border: 1px solid #adb5bd;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+        }
+
+        /* Prevent Bootstrap button hover color from being applied globally */
+        .btn:hover,
+        .btn:focus {
+            color: #ffffff !important;
+        }
+
         .admin.sidebar {
             position: sticky;
             top: 0;
@@ -87,14 +197,24 @@
             font-size: 0.8rem;
         }
 
-        @media (max-width: 992px) {
+        /* Large screens - sidebar hidden, navbar menu shown */
+        @media (min-width: 993px) {
+            .admin.sidebar {
+                display: none !important;
+            }
+
             .admin.container {
-                min-width: 100%;
-                margin: 0;
+                display: block;
+            }
+
+            .admin.main-content {
+                margin-left: 0;
+                width: 100%;
             }
         }
 
-        @media (max-width: 2000px) {
+        /* Small screens - sidebar shown, navbar menu hidden */
+        @media (max-width: 992px) {
             .admin.sidebar {
                 position: fixed;
                 top: 0;
@@ -126,13 +246,14 @@
 
             .admin.container {
                 display: block;
+                min-width: 100%;
+                margin: 0;
             }
 
             .admin.main-content {
                 margin-left: 0px;
                 width: 100%;
             }
-
         }
     </style>
 </head>

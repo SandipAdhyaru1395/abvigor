@@ -27,8 +27,13 @@
                             @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-auth-submit w-100">
-                            <i class="fa fa-arrow-right"></i> Login
+                        <button type="submit" class="btn btn-auth-submit w-100" id="loginBtn">
+                            <span class="btn-text">
+                                <i class="fa fa-arrow-right"></i> Login
+                            </span>
+                            <span class="btn-loading" style="display: none;">
+                                <i class="fa fa-spinner fa-spin"></i> Logging in...
+                            </span>
                         </button>
 
                         <div class="auth-footer mt-4 text-center">
@@ -163,6 +168,39 @@
         font-size: 0.9rem;
     }
 
+    /* Loading state animations */
+    .btn-auth-submit.loading {
+        pointer-events: none;
+        opacity: 0.85;
+        cursor: not-allowed;
+    }
+
+    .btn-auth-submit.loading .btn-text {
+        display: none;
+    }
+
+    .btn-auth-submit.loading .btn-loading {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.7;
+        }
+    }
+
+    .btn-auth-submit.loading:hover {
+        transform: translateY(0);
+        box-shadow: 0 6px 16px rgba(237, 28, 36, 0.35);
+    }
+
     .auth-footer {
         font-size: 0.9rem;
         color: #777777;
@@ -218,4 +256,38 @@
         }
     }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('#loginForm').on('submit', function(e) {
+            const $btn = $('#loginBtn');
+            const $form = $(this);
+            
+            // Prevent double submission
+            if ($btn.hasClass('loading')) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Add loading state
+            $btn.addClass('loading');
+            $btn.prop('disabled', true);
+            
+            // Optional: Auto-reset after 10 seconds if form doesn't submit
+            setTimeout(function() {
+                if ($btn.hasClass('loading')) {
+                    $btn.removeClass('loading');
+                    $btn.prop('disabled', false);
+                }
+            }, 10000);
+        });
+
+        // Reset button state if form validation fails
+        $('#loginForm').on('invalid', function() {
+            $('#loginBtn').removeClass('loading').prop('disabled', false);
+        });
+    });
+</script>
 @endpush

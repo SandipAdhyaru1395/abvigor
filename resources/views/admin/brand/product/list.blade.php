@@ -240,6 +240,97 @@
             font-style: italic;
         }
 
+        .brand-filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .brand-filter-section .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-filter-section .form-label i {
+            color: #667eea;
+        }
+
+        .brand-filter-section .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 8px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .brand-filter-section .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+
+        .form-check-label {
+            font-weight: 500;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        #dragDropInfo {
+            font-size: 13px;
+            padding: 10px 15px;
+            background: #fff3e0;
+            border-left: 3px solid #ff9800;
+            border-radius: 6px;
+            color: #e65100;
+            font-weight: 500;
+        }
+
+        #dragDropInfo i {
+            color: #ff9800;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        /* Drag and Drop Styles */
+        #products-table tbody tr {
+            cursor: move;
+        }
+
+        #products-table tbody tr.ui-sortable-helper {
+            background: #f8f9fa;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: rotate(2deg);
+        }
+
+        #products-table tbody tr.ui-sortable-placeholder {
+            height: 50px;
+            background: #e9ecef;
+            border: 2px dashed #667eea;
+            visibility: visible !important;
+        }
+
+        .drag-handle {
+            cursor: move;
+            color: #667eea;
+            font-size: 18px;
+            padding: 5px;
+        }
+
+        .drag-handle:hover {
+            color: #764ba2;
+        }
+
         @media (max-width: 768px) {
             .orders-card {
                 padding: 20px;
@@ -258,6 +349,14 @@
                 width: 100%;
                 text-align: center;
             }
+
+            .brand-filter-section .row {
+                flex-direction: column;
+            }
+
+            .brand-filter-section .col-md-8 {
+                margin-top: 15px;
+            }
         }
     </style>
 @endpush
@@ -274,17 +373,47 @@
                         </h1>
                     </div>
 
+                    <!-- Brand Filter -->
+                    <div class="brand-filter-section mb-4">
+                        <div id="dragDropInfo" class="mb-3" style="display: none;">
+                            <i class="fas fa-info-circle"></i> <span id="dragDropInfoText"></span>
+                        </div>
+                        <div class="row align-items-end">
+                            <div class="col-md-4">
+                                <label for="brandFilter" class="form-label">
+                                    <i class="fas fa-filter"></i> Filter by Brand
+                                </label>
+                                <select class="form-select" id="brandFilter" aria-label="Select brand">
+                                    <option value="">Select Brand</option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}">{{ $brand->title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-8 text-end">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="enableDragDrop" checked>
+                                    <label class="form-check-label" for="enableDragDrop">
+                                        <i class="fas fa-arrows-alt"></i> Enable Drag & Drop Ordering
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table id="products-table" class="table table-hover table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th scope="col"><input type="checkbox" id="select-all"></th>
+                                    <th scope="col" style="width: 50px;"><input type="checkbox" id="select-all"></th>
+                                    <th scope="col" style="width: 50px;"><i class="fas fa-grip-vertical"></i></th>
                                     <th scope="col">Title</th>
+                                    <th scope="col">Brand</th>
                                     <th scope="col">Product Code</th>
                                     <th scope="col">Copy</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="products-tbody">
 
                             </tbody>
                         </table>
@@ -324,6 +453,9 @@
                 serverSide: true,
                 ajax: {
                     url: '{{ route('admin.get.brand.products') }}',
+                    data: function(d) {
+                        d.brand_id = $('#brandFilter').val();
+                    }
                 },
                 dom: `
                     <"row mb-3"
@@ -343,35 +475,35 @@
                         extend: 'copyHtml5',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:nth-child(2))'
                         }
                     },
                     {
                         extend: 'excelHtml5',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:nth-child(2))'
                         }
                     },
                     {
                         extend: 'csvHtml5',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:nth-child(2))'
                         }
                     },
                     {
                         extend: 'pdfHtml5',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:nth-child(2))'
                         }
                     },
                     {
                         extend: 'print',
                         className: 'btn btn-sm',
                         exportOptions: {
-                            columns: ':visible:not(:first-child)'
+                            columns: ':visible:not(:first-child):not(:nth-child(2))'
                         }
                     }
                 ],
@@ -385,23 +517,161 @@
                         },
                     },
                     {
+                        data: null,
+                        width: '5%',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `<i class="fas fa-grip-vertical drag-handle"></i>`;
+                        },
+                    },
+                    {
                         data: 'title',
                     },
                     {
-                        data: 'product_code',
-                        width: '20%',
+                        data: 'brand_name',
+                        width: '15%',
+                        orderable: false,
+                        searchable: false,
                     },
                     {
+                        data: 'product_code',
                         width: '15%',
+                    },
+                    {
+                        data: 'id',
+                        width: '15%',
+                        orderable: false,
+                        searchable: false,
                         render: function(data, type, row) {
-                            return `<button type="button" class="btn btn-sm btn-primary text-white" data-id="${data}">Copy Product</button>`;
+                            return `<button type="button" class="btn btn-sm btn-primary text-white copy-product-btn" data-id="${data}">Copy Product</button>`;
                         },
                     }
                 ],
                 initComplete: function() {
                     $('.table-top-left').prepend(table_top_left_html);
+                    // Initial check for drag drop info
+                    checkAndInitSortable();
+                },
+                drawCallback: function() {
+                    checkAndInitSortable();
                 }
             });
+
+            // Brand filter change
+            $('#brandFilter').on('change', function() {
+                table.ajax.reload();
+                // Reinitialize sortable after reload if enabled and brand is selected
+                setTimeout(function() {
+                    checkAndInitSortable();
+                }, 500);
+            });
+
+            // Enable/Disable drag and drop
+            $('#enableDragDrop').on('change', function() {
+                checkAndInitSortable();
+            });
+
+            // Check if sortable should be enabled and initialize/destroy accordingly
+            function checkAndInitSortable() {
+                var brandSelected = $('#brandFilter').val() !== '';
+                var dragDropEnabled = $('#enableDragDrop').is(':checked');
+                var infoDiv = $('#dragDropInfo');
+                var infoText = $('#dragDropInfoText');
+                
+                if (brandSelected && dragDropEnabled) {
+                    initSortable();
+                    infoDiv.hide();
+                } else {
+                    var tbody = $('#products-table tbody');
+                    if (tbody.hasClass('ui-sortable')) {
+                        tbody.sortable('destroy');
+                    }
+                    
+                    // Show info message
+                    if (dragDropEnabled && !brandSelected) {
+                        infoText.text('Please select a brand to enable drag & drop ordering');
+                        infoDiv.show();
+                    } else if (!dragDropEnabled) {
+                        infoText.text('Drag & drop ordering is disabled');
+                        infoDiv.show();
+                    } else {
+                        infoDiv.hide();
+                    }
+                }
+            }
+
+            // Initialize sortable
+            function initSortable() {
+                if (!$('#enableDragDrop').is(':checked')) {
+                    return;
+                }
+
+                // Check if brand is selected
+                if ($('#brandFilter').val() === '') {
+                    var tbody = $('#products-table tbody');
+                    if (tbody.hasClass('ui-sortable')) {
+                        tbody.sortable('destroy');
+                    }
+                    return;
+                }
+
+                // Use setTimeout to ensure DataTable has rendered
+                setTimeout(function() {
+                    var tbody = $('#products-table tbody');
+                    
+                    // Destroy existing sortable if any
+                    if (tbody.hasClass('ui-sortable')) {
+                        tbody.sortable('destroy');
+                    }
+
+                    tbody.sortable({
+                        handle: '.drag-handle',
+                        placeholder: 'ui-sortable-placeholder',
+                        helper: function(e, tr) {
+                            var $originals = tr.children();
+                            var $helper = tr.clone();
+                            $helper.children().each(function(index) {
+                                $(this).width($originals.eq(index).width());
+                            });
+                            return $helper;
+                        },
+                        update: function(event, ui) {
+                            var productIds = [];
+                            $('#products-table tbody tr').each(function() {
+                                var id = $(this).find('.row-checkbox').val();
+                                if (id) {
+                                    productIds.push(id);
+                                }
+                            });
+
+                            if (productIds.length > 0) {
+                                // Save order
+                                $.ajax({
+                                    url: '{{ route('admin.brand.products.update.order') }}',
+                                    type: 'POST',
+                                    data: {
+                                        _token: '{{ csrf_token() }}',
+                                        product_ids: productIds
+                                    },
+                                    success: function(response) {
+                                        if (response.status) {
+                                            toastr.success('Product order updated successfully');
+                                        } else {
+                                            toastr.error('Failed to update product order');
+                                            table.ajax.reload(null, false);
+                                        }
+                                    },
+                                    error: function() {
+                                        toastr.error('Failed to update product order');
+                                        table.ajax.reload(null, false);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }, 100);
+            }
 
             // $('.table-top-left').html($('.table-top-left').html() + table_top_left_html );
 
@@ -457,7 +727,14 @@
                 });
             });
 
-            $('#products-table tbody').on('click', 'tr td:not(:first-child)', function() {
+            // Prevent row click when clicking on drag handle or checkbox
+            $('#products-table tbody').on('click', 'tr td:not(:first-child):not(:nth-child(2))', function(e) {
+                if ($(e.target).hasClass('drag-handle') || $(e.target).closest('.drag-handle').length) {
+                    return;
+                }
+                if ($(e.target).hasClass('copy-product-btn') || $(e.target).closest('.copy-product-btn').length) {
+                    return;
+                }
                 const row = $(this).closest('tr');
                 const id = row.find('.row-checkbox').val();
                 window.location.href = '{{ route('admin.brand.product.edit', ':id') }}'.replace(':id', id);

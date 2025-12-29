@@ -133,31 +133,33 @@
       </tr>
     </table>
 
-    <h3>Tractor Brand</h3>
-    <table>
-      <tr>
-        <td class="label">Brand:</td>
-        <td>{{ $order->brand->title }}</td>
-      </tr>
-    </table>
-
     <h3>Product Details</h3>
     <table class="product-table">
       <thead>
         <tr>
           <th>#</th>
+          <th>Brand</th>
           <th>Part Number</th>
           <th>Product Title</th>
           <th>Quantity</th>
         </tr>
       </thead>
       <tbody>
-        @foreach ($orderItems as $product)
+        @foreach ($orderItems as $orderProduct)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $product->product->product_code }}</td>
-                <td>{{ $product->product->title }}</td>
-                <td>{{ $product->qty }}</td>
+                <td>
+                    @if($orderProduct->category_title)
+                        {{ $orderProduct->category_title }}
+                    @elseif($orderProduct->product && $orderProduct->product->Brand)
+                        {{ $orderProduct->product->Brand->title }}
+                    @else
+                        -
+                    @endif
+                </td>
+                <td>{{ $orderProduct->product->product_code ?? '-' }}</td>
+                <td>{{ $orderProduct->product->title ?? '-' }}</td>
+                <td>{{ $orderProduct->qty }}</td>
             </tr>
         @endforeach
       </tbody>

@@ -15,6 +15,7 @@ class OrderProduct extends Model
         'order_number',
         'user_email',
         'qty',
+        'category_id',
         'category_title',
         'product_name'
     ];

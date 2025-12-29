@@ -16,15 +16,8 @@ class Order extends Model
         'order_no',
         'email',
         'user_id',
-        'category_id',
-        'brand_name',
         'order_date'
         ];
-
-    public function brand()
-    {
-        return $this->belongsTo(BrandCategory::class,'category_id');
-    }
 
     public function products()
     {

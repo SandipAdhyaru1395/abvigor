@@ -8,16 +8,29 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BrandProduct;
 use App\Models\BrandCategory;
+use App\Models\Cart;
+use App\Models\CartItem;
 
 class ProductController extends Controller
 {
     public function list(Request $request)
     {
-        $query = BrandProduct::where('category_id', $request->brand_id)->select(['id','title', 'product_code']);
+        $query = BrandProduct::where('category_id', $request->brand_id)
+            ->select(['id','title', 'product_code'])
+            ->orderBy('display_order', 'asc')
+            ->orderBy('id', 'asc');
         
-        // if ($request->has('brand_id') && $request->brand_id != '') {
-        //     $query->where('brand_id', $request->brand_id);
-        // }
+        // Get user's cart items
+        $cart = null;
+        $cartItems = [];
+        if (Auth::check()) {
+            $cart = Cart::where('user_id', Auth::user()->id)->first();
+            if ($cart) {
+                $cartItems = CartItem::where('cart_id', $cart->id)
+                    ->pluck('quantity', 'product_id')
+                    ->toArray();
+            }
+        }
 
         return datatables()->of($query)
             ->filter(function ($query) use ($request) {
@@ -29,10 +42,11 @@ class ProductController extends Controller
                 }
             })
             ->addColumn('product_info', function ($row) {
-                 return '<span>'.$row->product_code.' '.$row->title.'</span>';
+                return '<span>'.$row->product_code.' '.$row->title.'</span>';
             })
-            ->addColumn('quantity', function ($row) {
-                return '<input type="text" onkeypress="return /[0-9]/i.test(event.key)" class="form-control" name="quantity[' . $row->product_code . ']" autocomplete="off"/>';
+            ->addColumn('quantity', function ($row) use ($cartItems) {
+                $cartQuantity = isset($cartItems[$row->id]) ? $cartItems[$row->id] : '';
+                return '<input type="text" onkeypress="return /[0-9]/i.test(event.key)" class="form-control" name="quantity[' . $row->product_code . ']" value="' . $cartQuantity . '" autocomplete="off"/>';
             })
             ->addColumn('action', function ($row) {
                 $imageUrl = $row->ImageUrl ?? '#';

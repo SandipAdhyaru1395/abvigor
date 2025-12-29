@@ -5,6 +5,85 @@
                                 <i class="fas fa-bars"></i>
                                 <span>Menu</span>
                         </button>
+                        <!-- Navbar Menu (Desktop Only) -->
+                        <ul class="admin-navbar-menu">
+                                <li class="admin-nav-item">
+                                        <a class="admin-nav-link @if(route('admin.dashboard') == url()->current()) active @endif"
+                                                href="{{ route('admin.dashboard') }}">
+                                                <i class="fas fa-home"></i>
+                                                <span>Dashboard</span>
+                                        </a>
+                                </li>
+                                <li class="admin-nav-item">
+                                        <a class="admin-nav-link @if(route('admin.order.list') == url()->current()) active @endif"
+                                                href="{{ route('admin.order.list') }}">
+                                                <i class="fas fa-shopping-cart"></i>
+                                                <span>Orders</span>
+                                        </a>
+                                </li>
+                                <li class="admin-nav-item">
+                                        <a class="admin-nav-link @if(route('admin.user.list') == url()->current()) active @endif"
+                                                href="{{ route('admin.user.list') }}">
+                                                <i class="fas fa-users"></i>
+                                                <span>Users</span>
+                                        </a>
+                                </li>
+                                <li class="admin-nav-item">
+                                        <a class="admin-nav-link @if(route('admin.settings.index') == url()->current()) active @endif"
+                                                href="{{ route('admin.settings.index') }}">
+                                                <i class="fas fa-cog"></i>
+                                                <span>Settings</span>
+                                        </a>
+                                </li>
+                                {{-- <li class="admin-nav-item dropdown">
+                                        <a class="admin-nav-link @if(str_contains(url()->current(), 'catalog')) active @endif"
+                                                href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-box"></i>
+                                                <span>Catalog</span>
+                                                <i class="fas fa-chevron-down submenu-arrow"></i>
+                                        </a>
+                                        <ul class="dropdown-menu admin-navbar-dropdown">
+                                                <li>
+                                                        <a class="dropdown-item admin-dropdown-item"
+                                                                href="{{ route('admin.catalog.category.list') }}">
+                                                                <i class="fas fa-folder"></i>
+                                                                <span>Category</span>
+                                                        </a>
+                                                </li>
+                                                <li>
+                                                        <a class="dropdown-item admin-dropdown-item"
+                                                                href="{{ route('admin.catalog.product.list') }}">
+                                                                <i class="fas fa-cube"></i>
+                                                                <span>Products</span>
+                                                        </a>
+                                                </li>
+                                        </ul>
+                                </li> --}}
+                                <li class="admin-nav-item dropdown">
+                                        <a class="admin-nav-link @if(str_contains(url()->current(), 'brand')) active @endif"
+                                                href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-tags"></i>
+                                                <span>Brand</span>
+                                                <i class="fas fa-chevron-down submenu-arrow"></i>
+                                        </a>
+                                        <ul class="dropdown-menu admin-navbar-dropdown">
+                                                <li>
+                                                        <a class="dropdown-item admin-dropdown-item"
+                                                                href="{{ route('admin.brand.category.list') }}">
+                                                                <i class="fas fa-folder"></i>
+                                                                <span>Category</span>
+                                                        </a>
+                                                </li>
+                                                <li>
+                                                        <a class="dropdown-item admin-dropdown-item"
+                                                                href="{{ route('admin.brand.product.list') }}">
+                                                                <i class="fas fa-cube"></i>
+                                                                <span>Products</span>
+                                                        </a>
+                                                </li>
+                                        </ul>
+                                </li>
+                        </ul>
                 </div>
                 <div class="admin-navbar-right">
                         <div class="admin-navbar-user dropdown">
@@ -59,6 +138,13 @@
                         </a>
                 </li>
                 <li class="nav-item">
+                        <a class="nav-link @if(route('admin.settings.index') == url()->current()) active @endif"
+                                href="{{ route('admin.settings.index') }}">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                        </a>
+                </li>
+                {{-- <li class="nav-item">
                         <a class="nav-link @if(str_contains(url()->current(), 'catalog')) active @endif"
                                 href="#catalogSubmenu" data-bs-toggle="collapse" aria-expanded="false">
                                 <i class="fas fa-box"></i>
@@ -83,7 +169,7 @@
                                         </li>
                                 </ul>
                         </div>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                         <a class="nav-link @if(str_contains(url()->current(), 'brand')) active @endif"
                                 href="#brandSubmenu" data-bs-toggle="collapse" aria-expanded="false">
@@ -141,6 +227,125 @@
                 display: flex;
                 align-items: center;
                 gap: 24px;
+                flex: 1;
+        }
+
+        /* Navbar Menu (Desktop) */
+        .admin-navbar-menu {
+                display: none;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                align-items: center;
+                gap: 8px;
+                flex: 1;
+        }
+
+        .admin-nav-item {
+                position: relative;
+        }
+
+        .admin-nav-item.dropdown {
+                position: relative;
+        }
+
+        .admin-nav-link {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 14px;
+                color: #e2e8f0;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 500;
+                border-radius: 4px;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+        }
+
+        .admin-nav-link i {
+                font-size: 14px;
+        }
+
+        /* Navbar submenu arrow - matches sidebar behavior */
+        .admin-nav-link .submenu-arrow {
+                font-size: 14px;
+                transition: transform 0.2s ease, color 0.2s ease;
+                margin-left: 8px;
+                color: #cbd5e1;
+        }
+
+        .admin-nav-link:hover .submenu-arrow {
+                color: #cbd5e1;
+        }
+
+        .admin-nav-link.active .submenu-arrow {
+                color: #ffffff;
+        }
+
+        /* Rotate arrow when dropdown is shown - keep original color */
+        .admin-nav-item.dropdown.show .admin-nav-link .submenu-arrow,
+        .admin-nav-link[aria-expanded="true"] .submenu-arrow {
+                transform: rotate(180deg) !important;
+                /* Color remains unchanged - inherits from parent state */
+        }
+
+        .admin-nav-link:hover {
+                background: #334155;
+                color: #ffffff;
+        }
+
+        .admin-nav-link.active {
+                background: #3b82f6;
+                color: #ffffff;
+        }
+
+        .admin-nav-link.active i {
+                color: #ffffff;
+        }
+
+        /* Navbar Dropdown Menu */
+        .admin-navbar-dropdown {
+                min-width: 200px;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                border-radius: 4px;
+                padding: 4px 0;
+                margin-top: 8px !important;
+                background: #ffffff;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                z-index: 1000;
+        }
+
+        .admin-navbar-dropdown .admin-dropdown-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 16px;
+                border-radius: 0;
+                color: #334155;
+                font-size: 14px;
+                font-weight: 500;
+                transition: background-color 0.15s ease;
+                text-decoration: none;
+        }
+
+        .admin-navbar-dropdown .admin-dropdown-item i {
+                font-size: 16px;
+                width: 18px;
+                text-align: center;
+                color: #64748b;
+        }
+
+        .admin-navbar-dropdown .admin-dropdown-item:hover {
+                background: #f1f5f9;
+                color: #1e293b;
+        }
+
+        .admin-navbar-dropdown .admin-dropdown-item:hover i {
+                color: #3b82f6;
         }
 
         .admin-navbar-right {
@@ -329,6 +534,31 @@
                 border-right: 1px solid #e2e8f0;
         }
 
+        /* Hide sidebar on large screens, show navbar menu */
+        @media (min-width: 993px) {
+                .admin.sidebar {
+                        display: none !important;
+                }
+
+                .admin-navbar-menu {
+                        display: flex !important;
+                }
+
+                .admin-toggle-btn {
+                        display: none !important;
+                }
+
+                .admin.main-content {
+                        margin-left: 0 !important;
+                        width: 100% !important;
+                }
+
+                .admin.container {
+                        display: block !important;
+                }
+        }
+
+
         .admin.sidebar::-webkit-scrollbar {
                 width: 6px;
         }
@@ -352,7 +582,7 @@
         }
 
         .sidebar-nav .nav-item {
-                margin-bottom: 2px;
+                margin-bottom: 8px;
         }
 
         .sidebar-nav .nav-link {
@@ -449,6 +679,14 @@
                         box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
                 }
 
+                .admin-navbar-menu {
+                        display: none !important;
+                }
+
+                .admin-toggle-btn {
+                        display: flex !important;
+                }
+
                 .admin-navbar-container {
                         padding: 0 16px;
                         height: 56px;
@@ -513,3 +751,31 @@
                 }
         }
 </style>
+
+<script>
+        // Handle navbar dropdown arrow rotation - keep color unchanged
+        document.addEventListener('DOMContentLoaded', function() {
+                const dropdowns = document.querySelectorAll('.admin-nav-item.dropdown');
+                
+                dropdowns.forEach(function(dropdown) {
+                        const dropdownToggle = dropdown.querySelector('[data-bs-toggle="dropdown"]');
+                        if (dropdownToggle) {
+                                dropdown.addEventListener('show.bs.dropdown', function() {
+                                        const arrow = dropdownToggle.querySelector('.submenu-arrow');
+                                        if (arrow) {
+                                                arrow.style.transform = 'rotate(180deg)';
+                                                // Don't change color - keep original
+                                        }
+                                });
+                                
+                                dropdown.addEventListener('hide.bs.dropdown', function() {
+                                        const arrow = dropdownToggle.querySelector('.submenu-arrow');
+                                        if (arrow) {
+                                                arrow.style.transform = 'rotate(0deg)';
+                                                // Don't change color - keep original
+                                        }
+                                });
+                        }
+                });
+        });
+</script>
