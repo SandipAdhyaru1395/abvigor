@@ -28,13 +28,7 @@
                                                 <span>Users</span>
                                         </a>
                                 </li>
-                                <li class="admin-nav-item">
-                                        <a class="admin-nav-link @if(route('admin.settings.index') == url()->current()) active @endif"
-                                                href="{{ route('admin.settings.index') }}">
-                                                <i class="fas fa-cog"></i>
-                                                <span>Settings</span>
-                                        </a>
-                                </li>
+                                
                                 {{-- <li class="admin-nav-item dropdown">
                                         <a class="admin-nav-link @if(str_contains(url()->current(), 'catalog')) active @endif"
                                                 href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -82,6 +76,13 @@
                                                         </a>
                                                 </li>
                                         </ul>
+                                </li>
+                                <li class="admin-nav-item">
+                                        <a class="admin-nav-link @if(route('admin.settings.index') == url()->current()) active @endif"
+                                                href="{{ route('admin.settings.index') }}">
+                                                <i class="fas fa-cog"></i>
+                                                <span>Settings</span>
+                                        </a>
                                 </li>
                         </ul>
                 </div>
@@ -137,13 +138,7 @@
                                 <span>Users</span>
                         </a>
                 </li>
-                <li class="nav-item">
-                        <a class="nav-link @if(route('admin.settings.index') == url()->current()) active @endif"
-                                href="{{ route('admin.settings.index') }}">
-                                <i class="fas fa-cog"></i>
-                                <span>Settings</span>
-                        </a>
-                </li>
+               
                 {{-- <li class="nav-item">
                         <a class="nav-link @if(str_contains(url()->current(), 'catalog')) active @endif"
                                 href="#catalogSubmenu" data-bs-toggle="collapse" aria-expanded="false">
@@ -195,6 +190,13 @@
                                         </li>
                                 </ul>
                         </div>
+                </li>
+                <li class="nav-item">
+                        <a class="nav-link @if(route('admin.settings.index') == url()->current()) active @endif"
+                                href="{{ route('admin.settings.index') }}">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                        </a>
                 </li>
         </ul>
 </div>
