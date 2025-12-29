@@ -255,6 +255,42 @@
                 width: 100%;
             }
         }
+
+        /* Darker Toastr Notifications */
+        #toast-container > div {
+            opacity: 0.95 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        #toast-container > .toast-success {
+            background-color: #1e7e34 !important;
+            color: #ffffff !important;
+        }
+
+        #toast-container > .toast-error {
+            background-color: #721c24 !important;
+            color: #ffffff !important;
+        }
+
+        #toast-container > .toast-info {
+            background-color: #004085 !important;
+            color: #ffffff !important;
+        }
+
+        #toast-container > .toast-warning {
+            background-color: #856404 !important;
+            color: #ffffff !important;
+        }
+
+        #toast-container .toast-message {
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        #toast-container .toast-title {
+            color: #ffffff !important;
+            font-weight: 600;
+        }
     </style>
 </head>
 

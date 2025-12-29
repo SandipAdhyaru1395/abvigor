@@ -60,6 +60,37 @@
             outline: none;
         }
 
+        /* Validation error styles */
+        .form-control.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+        }
+
+        .form-control.valid {
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+        }
+
+        label.error {
+            color: #dc3545;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 5px;
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .btn-primary-login {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -167,43 +198,110 @@
                         <i class="fa fa-spinner fa-spin "></i> Logging in...
                     </span>
                 </button>
-                <div class="mt-3 text-center login-footer">
-                    <a href="{{ route('get.register') }}">Don't have an account? Register</a>
-                </div>
             </form>
         </div>
     </div>
 @endsection
 
 @push('scripts')
+<!-- jQuery Validation Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js"></script>
+
 <script>
     $(document).ready(function() {
-        $('#loginForm').on('submit', function(e) {
-            const $btn = $('#loginBtn');
-            const $form = $(this);
-            
-            // Prevent double submission
-            if ($btn.hasClass('loading')) {
-                e.preventDefault();
-                return false;
-            }
-            
-            // Add loading state
-            $btn.addClass('loading');
-            $btn.prop('disabled', true);
-            
-            // Optional: Auto-reset after 10 seconds if form doesn't submit
-            setTimeout(function() {
-                if ($btn.hasClass('loading')) {
-                    $btn.removeClass('loading');
-                    $btn.prop('disabled', false);
+        // Add custom alphanumeric validation method (must be defined before validate())
+        // $.validator.addMethod("alphanumeric", function(value, element) {
+        //     // If field is optional and empty, skip validation
+        //     if (this.optional(element)) {
+        //         return true;
+        //     }
+        //     // Check if value contains only letters and numbers
+        //     return /^[a-zA-Z0-9]+$/.test(value);
+        // }, "Username can only contain letters and numbers");
+
+        // Initialize jQuery Validation
+        $('#loginForm').validate({
+            rules: {
+                username: {
+                    required: true,
+                    // minlength: 3,
+                    maxlength: 10,
+                    // alphanumeric: true
+                },
+                password: {
+                    required: true,
+                    // minlength: 3,
+                    // maxlength: 10
                 }
-            }, 10000);
+            },
+            messages: {
+                username: {
+                    required: "Please enter your username",
+                    minlength: "Username must be at least 3 characters",
+                    maxlength: "Username cannot exceed 10 characters",
+                    alphanumeric: "Username can only contain letters and numbers"
+                },
+                password: {
+                    required: "Please enter your password",
+                    minlength: "Password must be at least 3 characters",
+                    maxlength: "Password cannot exceed 10 characters"
+                }
+            },
+            errorElement: 'label',
+            errorClass: 'error',
+            errorPlacement: function(error, element) {
+                // Remove any existing error messages
+                element.siblings('label.error').remove();
+                // Place error message after the input field
+                error.insertAfter(element);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('error').removeClass('valid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('error').addClass('valid');
+            },
+            submitHandler: function(form) {
+                const $btn = $('#loginBtn');
+                const $form = $(form);
+                
+                // Prevent double submission
+                if ($btn.hasClass('loading')) {
+                    return false;
+                }
+                
+                // Add loading state
+                $btn.addClass('loading');
+                $btn.prop('disabled', true);
+                
+                // Submit the form
+                form.submit();
+                
+                // Optional: Auto-reset after 10 seconds if form doesn't submit
+                setTimeout(function() {
+                    if ($btn.hasClass('loading')) {
+                        $btn.removeClass('loading');
+                        $btn.prop('disabled', false);
+                    }
+                }, 10000);
+            },
+            invalidHandler: function(event, validator) {
+                // Reset button state if validation fails
+                $('#loginBtn').removeClass('loading').prop('disabled', false);
+            }
         });
 
-        // Reset button state if form validation fails
-        $('#loginForm').on('invalid', function() {
-            $('#loginBtn').removeClass('loading').prop('disabled', false);
+        // Real-time validation on blur
+        $('#username, #password').on('blur', function() {
+            $(this).valid();
+        });
+
+        // Clear validation errors on input
+        $('#username, #password').on('input', function() {
+            if ($(this).hasClass('error')) {
+                $(this).valid();
+            }
         });
     });
 </script>
