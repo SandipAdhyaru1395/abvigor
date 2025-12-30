@@ -259,10 +259,10 @@
         /* Darker Toastr Notifications */
         #toast-container > div {
             opacity: 0.95 !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+            /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important; */
         }
 
-        #toast-container > .toast-success {
+        /* #toast-container > .toast-success {
             background-color: #1e7e34 !important;
             color: #ffffff !important;
         }
@@ -290,7 +290,7 @@
         #toast-container .toast-title {
             color: #ffffff !important;
             font-weight: 600;
-        }
+        } */
     </style>
 </head>
 
